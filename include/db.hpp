@@ -1,18 +1,34 @@
 #ifndef DB_H
 #define DB_H
 
-#include "extern_.h"
-#include "run_types_array.h"
-#include "string_run_types_array_dict.h"
-#include "string_time_dict.h"
+#include <time.h>
+#include <string>
+#include <vector>
+#include <map>
 
-EXTERN_ string_time_dict_t db_v_cmd_last_epochs;
-EXTERN_ string_run_types_array_dict_t db_v_cmd_run_types;
+typedef enum {
+    RUN_NORMAL = 0,
+    RUN_IN_TERM = 1,
+} run_type_t;
 
-EXTERN_ void db_init();
-EXTERN_ void db_cleanup();
+using run_count_t = uint32_t;
 
-EXTERN_ bool db_save(const char* filename);
-EXTERN_ bool db_load(const char* filename);
+struct db_entry {
+  time_t last_epoch;
+  std::vector<run_count_t> run_type_counts;
+};
+
+using db_t = std::map<std::string, db_entry>;
+
+extern db_t db_v_db;
+
+extern "C" {
+ void db_init();
+ void db_cleanup();
+
+ bool db_save(const char* filename);
+ bool db_load(const char* filename);
+}
+
 
 #endif /* DB_H */

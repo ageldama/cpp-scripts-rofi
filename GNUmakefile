@@ -1,8 +1,7 @@
 # -*- mode: makefile-gmake; -*-
 
 TARGET=scripts-rofi
-SRCS   = src/main.cpp src/argp.cpp src/tildeexpand.cpp
-#src/db.cpp
+SRCS   = src/main.cpp src/argp.cpp src/tildeexpand.cpp src/db.cpp
 OBJS   = $(SRCS:.cpp=.o)
 
 
