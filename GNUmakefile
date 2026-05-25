@@ -1,7 +1,7 @@
 # -*- mode: makefile-gmake; -*-
 
 TARGET=scripts-rofi
-SRCS   = main.c
+SRCS   = src/main.c
 OBJS   = $(SRCS:.c=.o)
 
 
@@ -15,6 +15,7 @@ CFLAGS  += -g -O0 -Wall -Werror -Wpedantic \
 		-fstack-protector \
 		-fsanitize=address,undefined
 
+CFLAGS  += -Imlib -Iinclude
 
 all: $(TARGET)
 
