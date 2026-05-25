@@ -1,12 +1,11 @@
 # -*- mode: makefile-gmake; -*-
 
 TARGET=scripts-rofi
-SRCS   = src/main.c
+SRCS   = src/main.c src/argp.c src/tildeexpand.c
 OBJS   = $(SRCS:.c=.o)
 
 
 # ----------------------------------------------
-
 
 LDFLAGS += -fsanitize=address,undefined
 
@@ -16,6 +15,9 @@ CFLAGS  += -g -O0 -Wall -Werror -Wpedantic \
 		-fsanitize=address,undefined
 
 CFLAGS  += -Imlib -Iinclude
+
+CLANG_FORMAT ?= clang-format
+
 
 all: $(TARGET)
 
@@ -28,6 +30,8 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(TARGET) $(OBJS)
 
+fmt:
+	${CLANG_FORMAT} -i src/*.c include/*.h
 
 
 

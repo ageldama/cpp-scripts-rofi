@@ -2,22 +2,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "argp.h"
 
-int
-main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
-  (void)argc;
-  (void)argv;
+    int rc = 0;
 
+    argp_init();
+    atexit(argp_cleanup);
+    rc = argp_parse(argc, argv);
+    (void)rc; // TODO
 
-
-
-  exit(EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }
 
-
-
-
 #if 0
 /*
 
