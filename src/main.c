@@ -21,8 +21,6 @@ int main(int argc, char* argv[])
 
 --- TODOs ------------------------------------------------------------
 
-* arg-parsing
-
 * save/load db-file : dict(k:str/v:int) dict(k:str/v:[]int)
 
 * rofi : select list, ask-yn
@@ -35,6 +33,9 @@ int main(int argc, char* argv[])
 
 
 --- DONEs ------------------------------------------------------------
+
+* arg-parsing
+
 
 */
 #endif

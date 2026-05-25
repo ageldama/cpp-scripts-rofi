@@ -27,3 +27,11 @@ void expand_tilde_string(const char *inp, string_t output)
   string_set_str(output, buf);
   free(buf);
 }
+
+
+bool expand_tilde_string_fn(string_t *out, const string_t in, void *data)
+{
+  (void)data;
+  expand_tilde_string(string_get_cstr(in), *out);
+  return true;
+}

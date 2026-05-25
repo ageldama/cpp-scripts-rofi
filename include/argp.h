@@ -29,4 +29,7 @@ EXTERN_ void argp_cleanup();
 EXTERN_ int argp_parse(const int argc, char* argv[]);
 EXTERN_ void argp_print_usage(FILE* fp);
 
+EXTERN_ void argp_set_file_regexes(const char *arg);
+EXTERN_ void argp_set_script_dirs(const char *arg);
+
 #endif /* ARGP_H */
