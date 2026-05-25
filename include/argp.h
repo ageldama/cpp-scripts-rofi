@@ -2,15 +2,16 @@
 #define ARGP_H
 
 #include "extern_.h"
-#include <stdio.h>
-#include <stdbool.h>
 #include "m-string.h"
 #include "string_list.h"
+#include <stdbool.h>
+#include <stdio.h>
 
 #define SCRIPT_ROFI_NO_DB_FLAG_FILE "~/.no-db-scripts-rofi"
 #define SCRIPT_ROFI_DB_FLAG_FILE "~/.scripts-rofi.hist"
 #define SCRIPT_ROFI_XTERM_COMMAND "x-terminal-emulator -e"
-#define SCRIPT_ROFI_SCRIPT_DIRS "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
+#define SCRIPT_ROFI_SCRIPT_DIRS                                      \
+    "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
 
 EXTERN_ bool argp_v_print;
 EXTERN_ bool argp_v_save;
@@ -29,7 +30,7 @@ EXTERN_ void argp_cleanup();
 EXTERN_ int argp_parse(const int argc, char* argv[]);
 EXTERN_ void argp_print_usage(FILE* fp);
 
-EXTERN_ void argp_set_file_regexes(const char *arg);
-EXTERN_ void argp_set_script_dirs(const char *arg);
+EXTERN_ void argp_set_file_regexes(const char* arg);
+EXTERN_ void argp_set_script_dirs(const char* arg);
 
 #endif /* ARGP_H */

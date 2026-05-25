@@ -7,14 +7,22 @@ OBJS   = $(SRCS:.c=.o)
 
 # ----------------------------------------------
 
-LDFLAGS += -fsanitize=address,undefined
+DEBUG?=1
 
-CFLAGS  += -g -O0 -Wall -Werror -Wpedantic \
-		-D_GLIBCXX_ASSERTIONS \
-		-fstack-protector \
-		-fsanitize=address,undefined
+CFLAGS  += -Wall -Werror -Wpedantic
+
+#ifeq ($(DEBUG), 1)
+	CFLAGS  += -g -O0
+	CFLAGS  += -fstack-protector
+	CFLAGS  += -fsanitize=address,undefined
+
+	LDFLAGS += -fsanitize=address,undefined
+#else
+	CFLAGS  += -O3
+#endif
 
 CFLAGS  += -Imlib -Iinclude
+
 
 CLANG_FORMAT ?= clang-format
 
