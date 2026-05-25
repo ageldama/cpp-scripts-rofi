@@ -10,8 +10,7 @@
 #include <wordexp.h>
 
 namespace SR::tilde {
-void expand_buf(
-    const char* inp, char* outp, const size_t outp_size)
+void expand_buf(const char* inp, char* outp, const size_t outp_size)
 {
     wordexp_t we;
 

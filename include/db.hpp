@@ -6,6 +6,8 @@
 #include <time.h>
 #include <vector>
 
+namespace SR::db {
+
 typedef enum {
     RUN_NORMAL = 0,
     RUN_IN_TERM = 1,
@@ -20,14 +22,16 @@ struct db_entry {
 
 using db_t = std::map<std::string, db_entry>;
 
-extern db_t db_v_db;
+extern db_t v_db;
 
-extern "C" {
-void db_init();
-void db_cleanup();
+extern void init();
 
-bool db_save(const char* filename);
-bool db_load(const char* filename);
+extern void cleanup();
+
+extern bool save(const char* filename);
+
+extern bool load(const char* filename);
+
 }
 
 #endif /* DB_H */

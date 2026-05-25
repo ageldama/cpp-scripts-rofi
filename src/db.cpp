@@ -1,22 +1,23 @@
 #include "db.hpp"
 
-db_t db_v_db;
+namespace SR::db {
+db_t v_db;
 
-void db_init() { }
+void init() { }
 
-void db_cleanup() { }
+void cleanup() { }
 
-bool db_save(const char* filename)
+bool save(const char* filename)
 {
     FILE* fp = NULL;
     fp = fopen(filename, "wb");
     if (NULL == fp)
         return false;
 
-    size_t tot = db_v_db.size();
+    size_t tot = v_db.size();
     fwrite(static_cast<void*>(&tot), sizeof(tot), 1, fp);
 
-    for (const auto& [cmd, entry] : db_v_db) {
+    for (const auto& [cmd, entry] : v_db) {
         // [cmd_len, cmd]
         size_t cmd_len = cmd.size();
         fwrite(static_cast<void*>(&cmd_len), sizeof(cmd_len), 1, fp);
@@ -44,7 +45,7 @@ bool db_save(const char* filename)
     return true; // ok
 }
 
-bool db_load(const char* filename)
+bool load(const char* filename)
 {
     FILE* fp = NULL;
     fp = fopen(filename, "rb");
@@ -54,7 +55,7 @@ bool db_load(const char* filename)
     size_t tot_cmd = 0;
     fread(static_cast<void*>(&tot_cmd), sizeof(tot_cmd), 1, fp);
 
-    db_v_db.clear();
+    v_db.clear();
 
     for (size_t i_cmd = 0; i_cmd < tot_cmd; i_cmd++) {
         // cmd_len, cmd
@@ -89,9 +90,11 @@ bool db_load(const char* filename)
         }
 
         //
-        db_v_db.insert_or_assign(cmd, entry);
+        v_db.insert_or_assign(cmd, entry);
     }
 
     fclose(fp);
     return true; // ok
+}
+
 }

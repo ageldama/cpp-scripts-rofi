@@ -17,15 +17,13 @@ extern string_vector v_file_regexes;
 extern bool v_ignorecase;
 extern std::string v_no_db_flag_file;
 
-extern "C" {
-void init();
-void cleanup();
-int parse(const int argc, char* argv[]);
-void print_usage(FILE* fp);
+extern void init();
+extern void cleanup();
+extern int parse(const int argc, char* argv[]);
+extern void print_usage(FILE* fp);
 
-void set_file_regexes(const char* arg);
-void set_script_dirs(const char* arg);
-}
+extern void set_file_regexes(const char* arg);
+extern void set_script_dirs(const char* arg);
 
 }
 

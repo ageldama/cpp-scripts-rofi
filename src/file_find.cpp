@@ -1,12 +1,13 @@
 #include "file_find.hpp"
 
-#include "safe_regex_ptr.hpp"
+#include "safe_regex.hpp"
 #include <cassert>
 #include <filesystem>
 #include <functional>
 #include <string>
 #include <vector>
 
+namespace SR::file_find {
 namespace fs = std::filesystem;
 
 bool only_file(const std::filesystem::directory_entry& entry)
@@ -14,10 +15,12 @@ bool only_file(const std::filesystem::directory_entry& entry)
     return fs::is_regular_file(entry);
 }
 
-directory_entry_pred make_only_file_and_regex_match(
-    const string_vector regexes)
+directory_entry_predicate make_only_file_and_regex_match(
+    const SR::string_vector regexes)
 {
-    std::vector<safe_regex_ptr> regex_ptrs;
+    using namespace SR::safe_regex;
+
+    std::vector<regex_ptr> regex_ptrs;
 
     for (const auto& re : regexes) {
         auto regex_ptr = make_regex_ptr(re.c_str());
@@ -42,10 +45,10 @@ directory_entry_pred make_only_file_and_regex_match(
         };
 }
 
-string_vector find_files_in_directories(
-    const string_vector& dirs, directory_entry_pred entry_pred)
+SR::string_vector find_in_directories(const SR::string_vector& dirs,
+    directory_entry_predicate entry_pred)
 {
-    string_vector results;
+    SR::string_vector results;
 
     for (const auto& dir : dirs) {
         for (const auto& entry :
@@ -58,4 +61,5 @@ string_vector find_files_in_directories(
     }
 
     return results;
+}
 }

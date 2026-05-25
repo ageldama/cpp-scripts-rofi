@@ -20,23 +20,23 @@ int main(int argc, char* argv[])
     rc = argp::parse(argc, argv);
     (void)rc;
 
-    db_init();
-    atexit(db_cleanup);
+    db::init();
+    atexit(db::cleanup);
 
     /*
     db_load(argp_v_db_file.c_str());
     db_save(argp_v_db_file.c_str());
+    */
 
     auto dirs = string_vector { "/home/aamadleg/.wine" };
     auto patterns = string_vector { "\\.lnk$" };
 
-    auto files = find_files_in_directories(
-        dirs, make_only_file_and_regex_match(patterns));
+    auto files = file_find::find_in_directories(
+        dirs, file_find::make_only_file_and_regex_match(patterns));
 
     for (const auto& file : files) {
         std::cout << file << std::endl;
     }
-    */
 
     exit(EXIT_SUCCESS);
 }

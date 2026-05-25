@@ -41,7 +41,7 @@ clean:
 	rm -f $(TARGET) $(OBJS)
 
 fmt:
-	${CLANG_FORMAT} -i src/*.c src/*.cpp include/*.h include/*.hpp
+	-${CLANG_FORMAT} -i src/*.c src/*.cpp include/*.h include/*.hpp
 
 
 

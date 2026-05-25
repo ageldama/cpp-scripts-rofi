@@ -16,7 +16,6 @@
 #define SCRIPT_ROFI_SCRIPT_DIRS                                      \
     "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
 
-
 namespace SR::argp {
 
 bool v_print = false;
@@ -33,11 +32,11 @@ std::string v_no_db_flag_file;
 
 void init()
 {
-  SR::tilde::expand(SCRIPT_ROFI_DB_FLAG_FILE, v_db_file);
+    SR::tilde::expand(SCRIPT_ROFI_DB_FLAG_FILE, v_db_file);
 
-  SR::tilde::expand(SCRIPT_ROFI_XTERM_COMMAND, v_term_command);
+    SR::tilde::expand(SCRIPT_ROFI_XTERM_COMMAND, v_term_command);
 
-  SR::tilde::expand(SCRIPT_ROFI_NO_DB_FLAG_FILE, v_no_db_flag_file);
+    SR::tilde::expand(SCRIPT_ROFI_NO_DB_FLAG_FILE, v_no_db_flag_file);
 
     set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
 }
@@ -71,15 +70,15 @@ int parse(const int argc, char* argv[])
             break;
 
         case 'D':
-          SR::tilde::expand(optarg, v_db_file);
+            SR::tilde::expand(optarg, v_db_file);
             break;
 
         case 'T':
-          SR::tilde::expand(optarg, v_term_command);
+            SR::tilde::expand(optarg, v_term_command);
             break;
 
         case 'W':
-          SR::tilde::expand(optarg, v_exec_wrapper);
+            SR::tilde::expand(optarg, v_exec_wrapper);
             break;
 
         case '/':

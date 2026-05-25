@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace SR {
-  using string_vector = std::vector<std::string>;
+using string_vector = std::vector<std::string>;
 }
 
 #endif /* STRING_VECTOR_HPP */
