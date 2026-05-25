@@ -10,80 +10,89 @@
 #include "argp.hpp"
 #include "tildeexpand.hpp"
 
-bool argp_v_print = false;
-bool argp_v_save = false;
-bool argp_v_execute = false;
-string_vector argp_v_script_dirs;
-std::string argp_v_db_file;
-std::string argp_v_term_command;
-bool argp_v_dump_and_exit = false;
-std::string argp_v_exec_wrapper;
-string_vector argp_v_file_regexes;
-bool argp_v_ignorecase = false;
-std::string argp_v_no_db_flag_file;
+#define SCRIPT_ROFI_NO_DB_FLAG_FILE "~/.no-db-scripts-rofi"
+#define SCRIPT_ROFI_DB_FLAG_FILE "~/.scripts-rofi.hist"
+#define SCRIPT_ROFI_XTERM_COMMAND "x-terminal-emulator -e"
+#define SCRIPT_ROFI_SCRIPT_DIRS                                      \
+    "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
 
-void argp_init()
+
+namespace SR::argp {
+
+bool v_print = false;
+bool v_save = false;
+bool v_execute = false;
+SR::string_vector v_script_dirs;
+std::string v_db_file;
+std::string v_term_command;
+bool v_dump_and_exit = false;
+std::string v_exec_wrapper;
+SR::string_vector v_file_regexes;
+bool v_ignorecase = false;
+std::string v_no_db_flag_file;
+
+void init()
 {
-    expand_tilde(SCRIPT_ROFI_DB_FLAG_FILE, argp_v_db_file);
+  SR::tilde::expand(SCRIPT_ROFI_DB_FLAG_FILE, v_db_file);
 
-    expand_tilde(SCRIPT_ROFI_XTERM_COMMAND, argp_v_term_command);
+  SR::tilde::expand(SCRIPT_ROFI_XTERM_COMMAND, v_term_command);
 
-    expand_tilde(SCRIPT_ROFI_NO_DB_FLAG_FILE, argp_v_no_db_flag_file);
+  SR::tilde::expand(SCRIPT_ROFI_NO_DB_FLAG_FILE, v_no_db_flag_file);
 
-    argp_set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
+    set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
 }
 
-void argp_cleanup() { }
+void cleanup() { }
 
-int argp_parse(const int argc, char* argv[])
+int parse(const int argc, char* argv[])
 {
     int opt;
 
     while ((opt = getopt(argc, argv, "?hpsePS:D:T:W:/:i")) != -1) {
         switch (opt) {
         case 's':
-            argp_v_save = true;
+            v_save = true;
             break;
 
         case 'e':
-            argp_v_execute = true;
+            v_execute = true;
             break;
 
         case 'p':
-            argp_v_print = true;
+            v_print = true;
             break;
 
         case 'P':
-            argp_v_dump_and_exit = true;
+            v_dump_and_exit = true;
             break;
 
         case 'S':
-            argp_set_script_dirs(optarg);
+            set_script_dirs(optarg);
             break;
 
         case 'D':
-            expand_tilde(optarg, argp_v_db_file);
+          SR::tilde::expand(optarg, v_db_file);
             break;
 
         case 'T':
-            expand_tilde(optarg, argp_v_term_command);
+          SR::tilde::expand(optarg, v_term_command);
             break;
 
         case 'W':
-            expand_tilde(optarg, argp_v_exec_wrapper);
+          SR::tilde::expand(optarg, v_exec_wrapper);
             break;
 
         case '/':
-            argp_set_file_regexes(optarg);
+            set_file_regexes(optarg);
             break;
 
         case 'i':
-            argp_v_ignorecase = true;
+            v_ignorecase = true;
             break;
 
         case '?':
         case 'h':
-            argp_print_usage(stdout);
+            print_usage(stdout);
             exit(EXIT_FAILURE);
             break;
         }
@@ -92,30 +101,30 @@ int argp_parse(const int argc, char* argv[])
     return 0;
 }
 
-void argp_print_usage(FILE* fp)
+void print_usage(FILE* fp)
 {
 #define P(s, ...) fprintf(fp, s, ##__VA_ARGS__)
     P("It asks to select a script within SCRIPT_DIRS and execute "
       "it.\n");
     P("\n");
-    P("(NO_DB_FLAG_FILE:  %s)\n", argp_v_no_db_flag_file.c_str());
+    P("(NO_DB_FLAG_FILE:  %s)\n", v_no_db_flag_file.c_str());
     P("\n");
     P("-p : print selection\n");
     P("-s : save selection\n");
     P("-e : execute selection\n");
 
     P("-S SCRIPT_DIRS  (':'-separated list)\n");
-    for (const auto& script_dir : argp_v_script_dirs) {
+    for (const auto& script_dir : v_script_dirs) {
         P("\t%s\n", script_dir.c_str());
     }
 
-    P("-D HIST_DB_FILE   : %s\n", argp_v_db_file.c_str());
-    P("-T XTERM_COMMAND  : %s\n", argp_v_term_command.c_str());
+    P("-D HIST_DB_FILE   : %s\n", v_db_file.c_str());
+    P("-T XTERM_COMMAND  : %s\n", v_term_command.c_str());
     P("-P : Dump stored history/freqs and exit\n");
     P("-W : execute wrapper (like 'wine')\n");
 
     P("-/ : filename matching regex\n");
-    for (const auto& file_regex : argp_v_file_regexes) {
+    for (const auto& file_regex : v_file_regexes) {
         P("\t%s\n", file_regex.c_str());
     }
 
@@ -125,22 +134,22 @@ void argp_print_usage(FILE* fp)
 #undef P
 }
 
-void argp_set_file_regexes(const char* arg)
+void set_file_regexes(const char* arg)
 {
-    argp_v_file_regexes.clear();
+    v_file_regexes.clear();
 
     std::string arg_ { arg };
     std::stringstream ss(arg_);
     std::string token;
 
     while (std::getline(ss, token, ':')) {
-        argp_v_file_regexes.emplace_back(token);
+        v_file_regexes.emplace_back(token);
     }
 }
 
-void argp_set_script_dirs(const char* arg)
+void set_script_dirs(const char* arg)
 {
-    argp_v_script_dirs.clear();
+    v_script_dirs.clear();
 
     std::string arg_ { arg };
     std::stringstream ss(arg_);
@@ -148,7 +157,9 @@ void argp_set_script_dirs(const char* arg)
 
     while (std::getline(ss, token, ':')) {
         std::string expanded;
-        expand_tilde(token.c_str(), expanded);
-        argp_v_script_dirs.emplace_back(expanded);
+        SR::tilde::expand(token.c_str(), expanded);
+        v_script_dirs.emplace_back(expanded);
     }
+}
+
 }

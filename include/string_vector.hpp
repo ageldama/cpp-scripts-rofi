@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
-using string_vector = std::vector<std::string>;
+namespace SR {
+  using string_vector = std::vector<std::string>;
+}
 
 #endif /* STRING_VECTOR_HPP */

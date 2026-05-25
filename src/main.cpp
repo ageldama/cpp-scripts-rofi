@@ -8,17 +8,24 @@
 
 #include <iostream>
 
+using namespace std;
+using namespace SR;
+
 int main(int argc, char* argv[])
 {
     int rc = 0;
 
-    argp_init();
-    atexit(argp_cleanup);
-    rc = argp_parse(argc, argv);
+    argp::init();
+    atexit(argp::cleanup);
+    rc = argp::parse(argc, argv);
     (void)rc;
 
     db_init();
     atexit(db_cleanup);
+
+    /*
+    db_load(argp_v_db_file.c_str());
+    db_save(argp_v_db_file.c_str());
 
     auto dirs = string_vector { "/home/aamadleg/.wine" };
     auto patterns = string_vector { "\\.lnk$" };
@@ -29,6 +36,7 @@ int main(int argc, char* argv[])
     for (const auto& file : files) {
         std::cout << file << std::endl;
     }
+    */
 
     exit(EXIT_SUCCESS);
 }
