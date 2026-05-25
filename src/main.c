@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "argp.h"
+#include "db.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,7 +12,10 @@ int main(int argc, char* argv[])
     argp_init();
     atexit(argp_cleanup);
     rc = argp_parse(argc, argv);
-    (void)rc; // TODO
+    (void)rc;
+
+    db_init();
+    atexit(db_cleanup);
 
     exit(EXIT_SUCCESS);
 }
