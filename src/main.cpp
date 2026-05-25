@@ -20,14 +20,14 @@ int main(int argc, char* argv[])
     db_init();
     atexit(db_cleanup);
 
-    auto dirs = string_vector{"/home/aamadleg/.wine"};
-    auto patterns = string_vector{"\\.lnk$"};
+    auto dirs = string_vector { "/home/aamadleg/.wine" };
+    auto patterns = string_vector { "\\.lnk$" };
 
-    auto files = find_files_in_directories(dirs,
-                                           make_only_file_and_regex_match(patterns));
+    auto files = find_files_in_directories(
+        dirs, make_only_file_and_regex_match(patterns));
 
-    for(const auto& file: files){
-      std::cout << file << std::endl;
+    for (const auto& file : files) {
+        std::cout << file << std::endl;
     }
 
     exit(EXIT_SUCCESS);
