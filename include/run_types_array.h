@@ -1,6 +1,7 @@
 #ifndef RUN_TYPES_ARRAY_H
 #define RUN_TYPES_ARRAY_H
 
+#include "m-string.h"
 #include "m-array.h"
 #include "run_types.h"
 
