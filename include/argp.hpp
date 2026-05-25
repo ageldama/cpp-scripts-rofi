@@ -23,13 +23,13 @@ extern bool argp_v_ignorecase;
 extern std::string argp_v_no_db_flag_file;
 
 extern "C" {
- void argp_init();
- void argp_cleanup();
- int argp_parse(const int argc, char* argv[]);
- void argp_print_usage(FILE* fp);
+void argp_init();
+void argp_cleanup();
+int argp_parse(const int argc, char* argv[]);
+void argp_print_usage(FILE* fp);
 
- void argp_set_file_regexes(const char* arg);
- void argp_set_script_dirs(const char* arg);
+void argp_set_file_regexes(const char* arg);
+void argp_set_script_dirs(const char* arg);
 }
 
 #endif /* ARGP_HPP */

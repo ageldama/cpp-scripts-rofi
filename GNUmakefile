@@ -11,7 +11,6 @@ OBJS   = $(SRCS:.cpp=.o)
 DEBUG?=1
 
 CFLAGS  += -Wall -Werror -Wpedantic
-CFLAGS  += -std=c++20
 
 #ifeq ($(DEBUG), 1)
 	CFLAGS  += -g -O0
@@ -25,7 +24,7 @@ CFLAGS  += -std=c++20
 
 CFLAGS  += -Imlib -Iinclude
 
-CXXFLAGS += $(CFLAGS)
+CXXFLAGS += -std=c++23 $(CFLAGS)
 
 
 CLANG_FORMAT ?= clang-format

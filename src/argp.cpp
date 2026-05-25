@@ -2,7 +2,9 @@
 #include <cstdlib>
 #include <unistd.h>
 
+#include <sstream>
 #include <string>
+
 #include "string_vector.hpp"
 
 #include "argp.hpp"
@@ -24,18 +26,14 @@ void argp_init()
 {
     expand_tilde(SCRIPT_ROFI_DB_FLAG_FILE, argp_v_db_file);
 
-    expand_tilde(
-        SCRIPT_ROFI_XTERM_COMMAND, argp_v_term_command);
+    expand_tilde(SCRIPT_ROFI_XTERM_COMMAND, argp_v_term_command);
 
-    expand_tilde(
-        SCRIPT_ROFI_NO_DB_FLAG_FILE, argp_v_no_db_flag_file);
+    expand_tilde(SCRIPT_ROFI_NO_DB_FLAG_FILE, argp_v_no_db_flag_file);
 
     argp_set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
 }
 
-void argp_cleanup()
-{
-}
+void argp_cleanup() { }
 
 int argp_parse(const int argc, char* argv[])
 {
@@ -100,30 +98,26 @@ void argp_print_usage(FILE* fp)
     P("It asks to select a script within SCRIPT_DIRS and execute "
       "it.\n");
     P("\n");
-    P("(NO_DB_FLAG_FILE:  %s)\n",
-      argp_v_no_db_flag_file.c_str());
+    P("(NO_DB_FLAG_FILE:  %s)\n", argp_v_no_db_flag_file.c_str());
     P("\n");
     P("-p : print selection\n");
     P("-s : save selection\n");
     P("-e : execute selection\n");
 
     P("-S SCRIPT_DIRS  (':'-separated list)\n");
-    for (const auto& script_dir:argp_v_script_dirs)
-        {
-          P("\t%s\n", script_dir.c_str());
-        }
+    for (const auto& script_dir : argp_v_script_dirs) {
+        P("\t%s\n", script_dir.c_str());
+    }
 
     P("-D HIST_DB_FILE   : %s\n", argp_v_db_file.c_str());
-    P("-T XTERM_COMMAND  : %s\n",
-      argp_v_term_command.c_str());
+    P("-T XTERM_COMMAND  : %s\n", argp_v_term_command.c_str());
     P("-P : Dump stored history/freqs and exit\n");
     P("-W : execute wrapper (like 'wine')\n");
 
     P("-/ : filename matching regex\n");
-    for(const auto& file_regex:argp_v_file_regexes)
-        {
-          P("\t%s\n", file_regex.c_str());
-        }
+    for (const auto& file_regex : argp_v_file_regexes) {
+        P("\t%s\n", file_regex.c_str());
+    }
 
     P("-i : ignorecase\n");
     P("\n");
@@ -133,8 +127,28 @@ void argp_print_usage(FILE* fp)
 
 void argp_set_file_regexes(const char* arg)
 {
+    argp_v_file_regexes.clear();
+
+    std::string arg_ { arg };
+    std::stringstream ss(arg_);
+    std::string token;
+
+    while (std::getline(ss, token, ':')) {
+        argp_v_file_regexes.emplace_back(token);
+    }
 }
 
 void argp_set_script_dirs(const char* arg)
 {
+    argp_v_script_dirs.clear();
+
+    std::string arg_ { arg };
+    std::stringstream ss(arg_);
+    std::string token;
+
+    while (std::getline(ss, token, ':')) {
+        std::string expanded;
+        expand_tilde(token.c_str(), expanded);
+        argp_v_script_dirs.emplace_back(expanded);
+    }
 }
