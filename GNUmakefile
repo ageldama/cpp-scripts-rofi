@@ -21,7 +21,7 @@ CFLAGS  += -Wall -Werror -Wpedantic
 	CFLAGS  += -O3
 #endif
 
-CFLAGS  += -Imlib -Iinclude
+CFLAGS  += -Iinclude
 
 CXXFLAGS += -std=c++20 $(CFLAGS)
 
