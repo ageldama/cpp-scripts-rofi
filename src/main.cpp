@@ -5,6 +5,7 @@
 #include "argp.hpp"
 #include "db.hpp"
 #include "file_find.hpp"
+#include "rofi.hpp"
 
 #include <iostream>
 
@@ -28,6 +29,7 @@ int main(int argc, char* argv[])
     db_save(argp_v_db_file.c_str());
     */
 
+    /*
     auto dirs = string_vector { "/home/aamadleg/.wine" };
     auto patterns = string_vector { "\\.lnk$" };
 
@@ -37,6 +39,25 @@ int main(int argc, char* argv[])
     for (const auto& file : files) {
         std::cout << file << std::endl;
     }
+    */
+
+    SR::string_vector cmdv = {
+          "rofi",
+      "-theme-str", "window {width: 200px; height: 150px;}",
+      "-dmenu",
+      "-p", "???",
+      "-sep", "\\n",
+      "-eh", "2",
+      "-markup-rows",
+      "-format", "i",
+    };
+
+    SR::rofi::run_rofi(cmdv, [](const int fd){
+            SR::rofi::pipe_write(fd, "<span size='x-large' weight='heavy'>Yes</span>\n");
+            SR::rofi::pipe_write(fd, "<span size='x-large' weight='heavy'>No</span>\n");
+
+    });
+
 
     exit(EXIT_SUCCESS);
 }

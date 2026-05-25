@@ -1,5 +1,5 @@
-#ifndef DB_H
-#define DB_H
+#ifndef DB_HPP
+#define DB_HPP
 
 #include <map>
 #include <string>
@@ -34,4 +34,4 @@ extern bool load(const char* filename);
 
 }
 
-#endif /* DB_H */
+#endif /* DB_HPP */
