@@ -24,7 +24,7 @@ CFLAGS  += -Wall -Werror -Wpedantic
 
 CFLAGS  += -Imlib -Iinclude
 
-CXXFLAGS += -std=c++23 $(CFLAGS)
+CXXFLAGS += -std=c++20 $(CFLAGS)
 
 
 CLANG_FORMAT ?= clang-format
