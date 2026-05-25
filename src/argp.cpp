@@ -1,37 +1,33 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
 
-#include "argp.h"
-#include "tildeexpand.h"
+#include <string>
+#include "string_vector.hpp"
+
+#include "argp.hpp"
+#include "tildeexpand.hpp"
 
 bool argp_v_print = false;
 bool argp_v_save = false;
 bool argp_v_execute = false;
-string_list_t argp_v_script_dirs;
-string_t argp_v_db_file;
-string_t argp_v_term_command;
+string_vector argp_v_script_dirs;
+std::string argp_v_db_file;
+std::string argp_v_term_command;
 bool argp_v_dump_and_exit = false;
-string_t argp_v_exec_wrapper;
-string_list_t argp_v_file_regexes;
+std::string argp_v_exec_wrapper;
+string_vector argp_v_file_regexes;
 bool argp_v_ignorecase = false;
-string_t argp_v_no_db_flag_file;
+std::string argp_v_no_db_flag_file;
 
 void argp_init()
 {
-    string_init(argp_v_db_file);
-    string_init(argp_v_term_command);
-    string_init(argp_v_exec_wrapper);
-    string_init(argp_v_no_db_flag_file);
+    expand_tilde(SCRIPT_ROFI_DB_FLAG_FILE, argp_v_db_file);
 
-    string_list_init(argp_v_script_dirs);
-    string_list_init(argp_v_file_regexes);
-
-    expand_tilde_string(SCRIPT_ROFI_DB_FLAG_FILE, argp_v_db_file);
-    expand_tilde_string(
+    expand_tilde(
         SCRIPT_ROFI_XTERM_COMMAND, argp_v_term_command);
-    expand_tilde_string(
+
+    expand_tilde(
         SCRIPT_ROFI_NO_DB_FLAG_FILE, argp_v_no_db_flag_file);
 
     argp_set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
@@ -39,13 +35,6 @@ void argp_init()
 
 void argp_cleanup()
 {
-    string_clear(argp_v_db_file);
-    string_clear(argp_v_term_command);
-    string_clear(argp_v_exec_wrapper);
-    string_clear(argp_v_no_db_flag_file);
-
-    string_list_clear(argp_v_script_dirs);
-    string_list_clear(argp_v_file_regexes);
 }
 
 int argp_parse(const int argc, char* argv[])
@@ -75,15 +64,15 @@ int argp_parse(const int argc, char* argv[])
             break;
 
         case 'D':
-            expand_tilde_string(optarg, argp_v_db_file);
+            expand_tilde(optarg, argp_v_db_file);
             break;
 
         case 'T':
-            expand_tilde_string(optarg, argp_v_term_command);
+            expand_tilde(optarg, argp_v_term_command);
             break;
 
         case 'W':
-            expand_tilde_string(optarg, argp_v_exec_wrapper);
+            expand_tilde(optarg, argp_v_exec_wrapper);
             break;
 
         case '/':
@@ -112,30 +101,28 @@ void argp_print_usage(FILE* fp)
       "it.\n");
     P("\n");
     P("(NO_DB_FLAG_FILE:  %s)\n",
-        string_get_cstr(argp_v_no_db_flag_file));
+      argp_v_no_db_flag_file.c_str());
     P("\n");
     P("-p : print selection\n");
     P("-s : save selection\n");
     P("-e : execute selection\n");
 
     P("-S SCRIPT_DIRS  (':'-separated list)\n");
-    for
-        M_EACH(script_dir, argp_v_script_dirs, string_list_t)
+    for (const auto& script_dir:argp_v_script_dirs)
         {
-            P("\t%s\n", string_get_cstr(*script_dir));
+          P("\t%s\n", script_dir.c_str());
         }
 
-    P("-D HIST_DB_FILE   : %s\n", string_get_cstr(argp_v_db_file));
+    P("-D HIST_DB_FILE   : %s\n", argp_v_db_file.c_str());
     P("-T XTERM_COMMAND  : %s\n",
-        string_get_cstr(argp_v_term_command));
+      argp_v_term_command.c_str());
     P("-P : Dump stored history/freqs and exit\n");
     P("-W : execute wrapper (like 'wine')\n");
 
     P("-/ : filename matching regex\n");
-    for
-        M_EACH(file_regex, argp_v_file_regexes, string_list_t)
+    for(const auto& file_regex:argp_v_file_regexes)
         {
-            P("\t%s\n", string_get_cstr(*file_regex));
+          P("\t%s\n", file_regex.c_str());
         }
 
     P("-i : ignorecase\n");
@@ -146,25 +133,8 @@ void argp_print_usage(FILE* fp)
 
 void argp_set_file_regexes(const char* arg)
 {
-    string_t arg_str;
-    string_init_set_str(arg_str, arg);
-    string_list_split(argp_v_file_regexes, arg_str, ':');
-    string_clear(arg_str);
 }
 
 void argp_set_script_dirs(const char* arg)
 {
-    string_t arg_str;
-    string_init_set_str(arg_str, arg);
-    string_list_split(argp_v_script_dirs, arg_str, ':');
-    string_clear(arg_str);
-
-    string_list_t expandeds;
-    string_list_init(expandeds);
-
-    string_list_transform(
-        expandeds, argp_v_script_dirs, expand_tilde_string_fn, NULL);
-
-    string_list_set(argp_v_script_dirs, expandeds);
-    string_list_clear(expandeds);
 }

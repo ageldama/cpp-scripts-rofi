@@ -1,8 +1,9 @@
 # -*- mode: makefile-gmake; -*-
 
 TARGET=scripts-rofi
-SRCS   = src/main.c src/argp.c src/tildeexpand.c src/db.c
-OBJS   = $(SRCS:.c=.o)
+SRCS   = src/main.cpp src/argp.cpp src/tildeexpand.cpp
+#src/db.cpp
+OBJS   = $(SRCS:.cpp=.o)
 
 
 # ----------------------------------------------
@@ -10,6 +11,7 @@ OBJS   = $(SRCS:.c=.o)
 DEBUG?=1
 
 CFLAGS  += -Wall -Werror -Wpedantic
+CFLAGS  += -std=c++20
 
 #ifeq ($(DEBUG), 1)
 	CFLAGS  += -g -O0
@@ -23,6 +25,8 @@ CFLAGS  += -Wall -Werror -Wpedantic
 
 CFLAGS  += -Imlib -Iinclude
 
+CXXFLAGS += $(CFLAGS)
+
 
 CLANG_FORMAT ?= clang-format
 
@@ -30,16 +34,16 @@ CLANG_FORMAT ?= clang-format
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(TARGET) $(OBJS)
 
 fmt:
-	${CLANG_FORMAT} -i src/*.c include/*.h
+	${CLANG_FORMAT} -i src/*.c src/*.cpp include/*.h include/*.hpp
 
 
 
