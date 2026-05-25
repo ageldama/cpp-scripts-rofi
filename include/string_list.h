@@ -4,7 +4,6 @@
 #include "m-string.h"
 #include "m-list.h"
 
-LIST_DEF_AS(string_list, string_t, M_STRING_OPLIST)
-
+M_LIST_DEF_AS(string_list, string_list_t, string_list_it_t, string_t)
 
 #endif /* STRING_LIST_H */
