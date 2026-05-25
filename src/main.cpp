@@ -42,40 +42,7 @@ int main(int argc, char* argv[])
     }
     */
 
-    SR::string_vector cmdv = {
-        "rofi",
-        "-theme-str",
-        "window {width: 200px; height: 150px;}",
-        "-dmenu",
-        "-p",
-        "???",
-        "-sep",
-        "\\n",
-        "-eh",
-        "2",
-        "-markup-rows",
-        "-format",
-        "i",
-    };
-
-    auto res = SR::rofi::run_rofi(cmdv, [](const int fd) {
-        SR::rofi::pipe_write(
-            fd, "<span size='x-large' weight='heavy'>Yes</span>\n");
-        SR::rofi::pipe_write(
-            fd, "<span size='x-large' weight='heavy'>No</span>\n");
-    });
-
-    bool run_ok = false;
-    int run_exitcode = 0;
-    std::string run_stdout;
-    std::tie(run_ok, run_exitcode, run_stdout) = res;
-
-    std::string run_stdout_trimmed = str::trim(run_stdout);
-
-    std::cout << "RUN_OK: " << run_ok << std::endl;
-    std::cout << "RUN-EXITCODE: " << run_exitcode << std::endl;
-    std::cout << "RUN-STDOUT: [" << run_stdout_trimmed << "]"
-              << std::endl;
+    SR::rofi::ask_yn("Y/N???", "YYYYYY", "NNNNN");
 
     exit(EXIT_SUCCESS);
 }
@@ -85,13 +52,15 @@ int main(int argc, char* argv[])
 
 --- TODOs ------------------------------------------------------------
 
-* rofi : select list, ask-yn
+* rofi : select list
 
 * execvp
 
 
 
 --- DONEs ------------------------------------------------------------
+
+* rofi : ask-yn
 
 * arg-parsing
 * save/load db-file : dict(k:str/v:int) dict(k:str/v:[]int)

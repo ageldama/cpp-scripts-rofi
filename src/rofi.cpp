@@ -13,6 +13,15 @@ int pipe_write(const int fd, const char* s)
     return write(fd, s, strlen(s));
 }
 
+int pipe_write_and_sepchar(
+    const int fd, const char* s, const char sep)
+{
+    int written = pipe_write(fd, s);
+    char buf[1] = { sep };
+    written += write(fd, buf, 1);
+    return written;
+}
+
 std::string read_all_fd(int fd)
 {
     std::string result;
