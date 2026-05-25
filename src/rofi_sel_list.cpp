@@ -1,12 +1,14 @@
 #include "rofi.hpp"
 #include "str.hpp"
+#include "string_vector.hpp"
 
 namespace SR::rofi {
 
 using namespace SR;
 
-std::optional<std::string> ask_yn(const std::string& prompt,
-    const std::string& label_y, const std::string& label_n)
+  // TODO
+std::optional<std::string> select_list(const std::string& prompt,
+                                       const SR::string_vector& sel_list)
 {
     SR::string_vector cmdv = {
         "rofi",

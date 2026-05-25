@@ -24,7 +24,7 @@ extern std::optional<std::string> ask_yn(const std::string& prompt,
     const std::string& label_y, const std::string& label_n);
 
 extern std::optional<std::string> select_list(
-    const std::string& prompt, const SR::string_vector sel_list);
+    const std::string& prompt, const SR::string_vector& sel_list);
 
 }
 
