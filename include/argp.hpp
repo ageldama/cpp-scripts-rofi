@@ -25,6 +25,9 @@ extern void print_usage(FILE* fp);
 extern void set_file_regexes(const char* arg);
 extern void set_script_dirs(const char* arg);
 
+extern bool db_load_allowed();
+extern bool db_save_allowed();
+
 }
 
 #endif /* ARGP_HPP */

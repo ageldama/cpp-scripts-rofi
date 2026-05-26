@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 
+#include <filesystem>
+
 #include "string_vector.hpp"
 
 #include "argp.hpp"
@@ -160,5 +162,18 @@ void set_script_dirs(const char* arg)
         v_script_dirs.emplace_back(expanded);
     }
 }
+
+namespace fs = std::filesystem;
+
+bool db_load_allowed()
+{
+    if (v_db_file == "")
+        return false;
+    if (fs::exists(v_no_db_flag_file))
+        return false;
+    return true;
+}
+
+extern bool db_save_allowed() { return db_load_allowed() && v_save; }
 
 }

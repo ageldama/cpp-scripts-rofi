@@ -26,8 +26,7 @@ int main(int argc, char* argv[])
     db::init();
     atexit(db::cleanup);
 
-    // FIXME
-    if (SR::argp::v_db_file != "")
+    if (SR::argp::db_load_allowed())
         SR::db::load(SR::argp::v_db_file.c_str());
 
     if (SR::argp::v_dump_and_exit) {
@@ -66,23 +65,31 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
     }
 
-    printf("exit:%d // alt:%d // cmd:[%s]\n", res.value().exitcode,
-        res.value().alt, res.value().stdout.c_str());
-
     const auto cmd = res.value().stdout;
-    SR::db::upd_last_epoch(cmd);
-    SR::db::incr_run_count(cmd,
-        res.value().alt ? SR::db::RUN_IN_TERM : SR::db::RUN_NORMAL);
 
-    // FIXME
-    if (SR::argp::v_db_file != "" && SR::argp::v_save)
+    const auto most_run_type
+        = SR::db::get_most_run_type(cmd, SR::db::RUN_NORMAL);
+
+    const auto selected_run_type
+        = res.value().alt ? SR::db::RUN_IN_TERM : SR::db::RUN_NORMAL;
+
+    SR::db::run_type_t final_run_type = SR::db::RUN_NORMAL;
+
+    if (selected_run_type != most_run_type) {
+        // TODO SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY",
+        // "NNNNN");
+    }
+
+    SR::db::upd_last_epoch(cmd);
+    SR::db::incr_run_count(cmd, final_run_type);
+
+    if (SR::argp::db_save_allowed())
         SR::db::save(SR::argp::v_db_file.c_str());
 
     // TODO print
     // TODO exec
     // TODO exec-wrapper
     // TODO exec-in-term
-    // TODO SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY", "NNNNN");
 
     exit(EXIT_SUCCESS);
 }
