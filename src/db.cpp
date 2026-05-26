@@ -1,5 +1,6 @@
 #include "db.hpp"
 #include <algorithm>
+#include <iostream>
 
 namespace SR::db {
 db_t v_db;
@@ -12,8 +13,10 @@ bool save(const char* filename)
 {
     FILE* fp = NULL;
     fp = fopen(filename, "wb");
-    if (NULL == fp)
+    if (NULL == fp) {
+        perror("fopen for write hist");
         return false;
+    }
 
     size_t tot = v_db.size();
     fwrite(static_cast<void*>(&tot), sizeof(tot), 1, fp);
@@ -122,7 +125,9 @@ time_t upd_last_epoch(const std::string& cmd)
 
     auto entry_ = get(cmd);
     if (entry_) {
-        entry_.value().last_epoch = now;
+        auto entry_copy = entry_.value();
+        entry_copy.last_epoch = now;
+        v_db[cmd] = entry_copy;
     } else {
         v_db[cmd] = db_entry {
             .last_epoch = now,
@@ -174,6 +179,7 @@ run_count_t incr_run_count(
     }
 
     auto new_count = ++entry.run_type_counts[run_type];
+    v_db[cmd] = entry;
     return new_count;
 }
 
