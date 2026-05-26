@@ -15,4 +15,12 @@ SR::string_vector tokenize_commandline(const std::string& cmdline)
 
     return results;
 }
+
+void tokenize_cmd_and_prepend(
+    SR::string_vector& target, const std::string& cmdline)
+{
+    const auto tokens = tokenize_commandline(cmdline);
+    target.insert(target.begin(), tokens.begin(), tokens.end());
+}
+
 }

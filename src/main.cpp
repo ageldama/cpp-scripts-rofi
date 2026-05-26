@@ -72,11 +72,13 @@ int main(int argc, char* argv[])
     };
 
     if (SR::argp::v_exec_wrapper != "") {
-        // TODO vec.insert(vec.begin(), prefix.begin(), prefix.end());
+        SR::str::tokenize_cmd_and_prepend(
+            cmdv, SR::argp::v_exec_wrapper);
     }
 
     if (final_run_type == SR::db::RUN_IN_TERM) {
-        // TODO
+        SR::str::tokenize_cmd_and_prepend(
+            cmdv, SR::argp::v_term_command);
     }
 
     if (SR::argp::v_print) {
