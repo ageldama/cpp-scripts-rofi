@@ -1,12 +1,13 @@
 #ifndef DB_HPP
 #define DB_HPP
 
+#include <cstdint>
+#include <functional>
 #include <map>
 #include <optional>
 #include <string>
 #include <time.h>
 #include <vector>
-#include <cstdint>
 
 namespace SR::db {
 
@@ -35,7 +36,8 @@ extern bool save(const char* filename);
 
 extern bool load(const char* filename);
 
-extern std::optional<db_entry> get(const std::string& cmd);
+extern std::optional<std::reference_wrapper<db_entry>> get(
+    const std::string& cmd);
 
 extern time_t upd_last_epoch(const std::string& cmd);
 

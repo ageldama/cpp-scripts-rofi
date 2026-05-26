@@ -1,6 +1,6 @@
 #include "db.hpp"
 #include <algorithm>
-#include <iostream>
+#include <functional>
 
 namespace SR::db {
 db_t v_db;
@@ -101,11 +101,12 @@ bool load(const char* filename)
     return true; // ok
 }
 
-std::optional<db_entry> get(const std::string& cmd)
+std::optional<std::reference_wrapper<db_entry>> get(
+    const std::string& cmd)
 {
     auto it = v_db.find(cmd);
     if (it != v_db.end()) {
-        return std::make_optional(it->second);
+        return it->second;
     }
     return std::nullopt;
 }
@@ -114,7 +115,8 @@ time_t get_last_epoch(const std::string& cmd)
 {
     auto entry_ = get(cmd);
     if (entry_) {
-        return entry_.value().last_epoch;
+        const db_entry& entry_ref = entry_.value();
+        return entry_ref.last_epoch;
     }
     return 0;
 }
@@ -125,9 +127,8 @@ time_t upd_last_epoch(const std::string& cmd)
 
     auto entry_ = get(cmd);
     if (entry_) {
-        auto entry_copy = entry_.value();
-        entry_copy.last_epoch = now;
-        v_db[cmd] = entry_copy;
+        db_entry& entry_ref = entry_.value();
+        entry_ref.last_epoch = now;
     } else {
         v_db[cmd] = db_entry {
             .last_epoch = now,
@@ -143,7 +144,8 @@ run_type_t get_most_run_type(
 {
     auto entry_ = get(cmd);
     if (entry_) {
-        const auto& counts = entry_.value().run_type_counts;
+        const db_entry& entry_ref = entry_.value();
+        const auto& counts = entry_ref.run_type_counts;
         if (counts.empty())
             return default_val;
 
@@ -164,14 +166,15 @@ run_count_t incr_run_count(
     auto entry_ = get(cmd);
 
     if (!entry_) {
-        entry_ = std::make_optional(db_entry {
+        auto entry = db_entry {
             .last_epoch = 0,
             .run_type_counts = std::vector<run_count_t> {},
-        });
-        v_db[cmd] = entry_.value();
+        };
+        v_db[cmd] = entry;
+        entry_ = entry;
     }
 
-    auto entry = entry_.value();
+    db_entry& entry = entry_.value();
     auto size = static_cast<std::vector<run_count_t>::size_type>(
         run_type + 1);
     if (entry.run_type_counts.size() < size) {
@@ -179,7 +182,6 @@ run_count_t incr_run_count(
     }
 
     auto new_count = ++entry.run_type_counts[run_type];
-    v_db[cmd] = entry;
     return new_count;
 }
 
