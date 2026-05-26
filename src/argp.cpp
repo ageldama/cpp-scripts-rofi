@@ -104,34 +104,34 @@ int parse(const int argc, char* argv[])
 
 void print_usage(FILE* fp)
 {
-#define P(s, ...) fprintf(fp, s, ##__VA_ARGS__)
+#define P(s, ...) fprintf(fp, s __VA_OPT__(, ) __VA_ARGS__)
     P("It asks to select a script within SCRIPT_DIRS and execute "
-      "it.\n");
-    P("\n");
+      "it.\n", );
+    P("\n", );
     P("(NO_DB_FLAG_FILE:  %s)\n", v_no_db_flag_file.c_str());
-    P("\n");
-    P("-p : print selection\n");
-    P("-s : save selection\n");
-    P("-e : execute selection\n");
+    P("\n", );
+    P("-p : print selection\n", );
+    P("-s : save selection\n", );
+    P("-e : execute selection\n", );
 
-    P("-S SCRIPT_DIRS  (':'-separated list)\n");
+    P("-S SCRIPT_DIRS  (':'-separated list)\n", );
     for (const auto& script_dir : v_script_dirs) {
         P("\t%s\n", script_dir.c_str());
     }
 
     P("-D HIST_DB_FILE   : %s\n", v_db_file.c_str());
     P("-T XTERM_COMMAND  : %s\n", v_term_command.c_str());
-    P("-P : Dump stored history/freqs and exit\n");
-    P("-W : execute wrapper (like 'wine')\n");
+    P("-P : Dump stored history/freqs and exit\n", );
+    P("-W : execute wrapper (like 'wine')\n", );
 
-    P("-/ : filename matching regex\n");
+    P("-/ : filename matching regex\n", );
     for (const auto& file_regex : v_file_regexes) {
         P("\t%s\n", file_regex.c_str());
     }
 
-    P("-i : ignorecase\n");
-    P("\n");
-    P("Exiting.\n");
+    P("-i : ignorecase\n", );
+    P("\n", );
+    P("Exiting.\n", );
 #undef P
 }
 

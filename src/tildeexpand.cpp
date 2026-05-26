@@ -16,7 +16,7 @@ void expand_buf(const char* inp, char* outp, const size_t outp_size)
 
     if (wordexp(inp, &we, WRDE_NOCMD) == 0) {
         memset(outp, 0, outp_size);
-        snprintf(outp, outp_size, we.we_wordv[0]);
+        strncpy(outp, we.we_wordv[0], outp_size);
         wordfree(&we);
     }
 }
