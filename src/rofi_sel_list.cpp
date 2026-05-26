@@ -6,34 +6,32 @@ namespace SR::rofi {
 
 using namespace SR;
 
-  // TODO
-std::optional<std::string> select_list(const std::string& prompt,
+  std::optional<rofi_result> select_list(const rofi_common_opts& common_opts,
                                        const SR::string_vector& sel_list)
 {
+    std::string ignorecase_opts = "";
+  if (common_opts.ignorecase) ignorecase_opts = "-i";
+
     SR::string_vector cmdv = {
         "rofi",
-        "-theme-str",
-        "window {width: 200px; height: 150px;}",
+        ignorecase_opts,
+        common_opts.addopts,
         "-dmenu",
         "-p",
-        prompt,
+        common_opts.prompt,
         "-sep",
         R"(\0)",
-        "-eh",
-        "2",
-        "-markup-rows",
-        "-format",
-        "i",
+        "-kb-accept-alt",
+        R"()",
+        "-kb-custom-1",
+        R"(Shift+Return)",
     };
 
-    auto lbl_y = std::string("<span size='x-large' weight='heavy'>")
-        + label_y + std::string("</span>");
-    auto lbl_n = std::string("<span size='x-large' weight='heavy'>")
-        + label_n + std::string("</span>");
 
-    auto res = SR::rofi::run_rofi(cmdv, [lbl_y, lbl_n](const int fd) {
-        SR::rofi::pipe_write_and_sepchar(fd, lbl_y.c_str(), '\0');
-        SR::rofi::pipe_write_and_sepchar(fd, lbl_n.c_str(), '\0');
+    auto res = SR::rofi::run_rofi(cmdv, [&sel_list](const int fd) {
+      for (const auto &item :sel_list){
+        SR::rofi::pipe_write_and_sepchar(fd, item.c_str(), '\0');
+      }
     });
 
     bool run_ok = false;
@@ -46,7 +44,9 @@ std::optional<std::string> select_list(const std::string& prompt,
     if (!run_ok || run_exitcode != 0)
         return std::nullopt;
 
-    return std::make_optional(run_stdout_trimmed);
+    return std::make_optional(rofi_result{.exitcode= run_exitcode,
+                                          .alt = run_exitcode > 256,
+                                          .stdout = run_stdout_trimmed,});
 }
 
 }

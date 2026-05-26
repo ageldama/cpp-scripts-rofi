@@ -30,19 +30,19 @@ int main(int argc, char* argv[])
     db_save(argp_v_db_file.c_str());
     */
 
-    /*
     auto dirs = string_vector { "/home/aamadleg/.wine" };
     auto patterns = string_vector { "\\.lnk$" };
 
     auto files = file_find::find_in_directories(
         dirs, file_find::make_only_file_and_regex_match(patterns));
 
-    for (const auto& file : files) {
-        std::cout << file << std::endl;
-    }
-    */
+    auto opts = SR::rofi::rofi_common_opts{
+        .prompt= "Select a script to run (Shift-Enter == run-in-terminal)",
+        .ignorecase= true,
+    };
+    auto res = SR::rofi::select_list(opts, files); // FIXME
 
-    SR::rofi::ask_yn("Y/N???", "YYYYYY", "NNNNN");
+    //SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY", "NNNNN");
 
     exit(EXIT_SUCCESS);
 }

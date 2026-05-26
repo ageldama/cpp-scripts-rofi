@@ -5,16 +5,21 @@ namespace SR::rofi {
 
 using namespace SR;
 
-std::optional<std::string> ask_yn(const std::string& prompt,
+  std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
     const std::string& label_y, const std::string& label_n)
 {
+  std::string ignorecase_opts = "";
+  if (common_opts.ignorecase) ignorecase_opts = "-i";
+
     SR::string_vector cmdv = {
         "rofi",
+        ignorecase_opts,
+        common_opts.addopts,
         "-theme-str",
         "window {width: 200px; height: 150px;}",
         "-dmenu",
         "-p",
-        prompt,
+        common_opts.prompt,
         "-sep",
         R"(\0)",
         "-eh",
@@ -44,7 +49,11 @@ std::optional<std::string> ask_yn(const std::string& prompt,
     if (!run_ok || run_exitcode != 0)
         return std::nullopt;
 
-    return std::make_optional(run_stdout_trimmed);
+    return std::make_optional(rofi_result{
+      .exitcode= run_exitcode,
+      .alt= false,
+      .stdout= run_stdout_trimmed,
+      });
 }
 
 }

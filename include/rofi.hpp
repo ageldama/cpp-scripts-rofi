@@ -20,11 +20,26 @@ extern std::string read_all_fd(int fd);
 extern std::tuple<bool, int, std::string> run_rofi(
     const SR::string_vector& cmdv, rofi_write_fn write_fn);
 
-extern std::optional<std::string> ask_yn(const std::string& prompt,
+  struct rofi_result {
+    int exitcode;
+    bool alt;
+    std::string stdout;
+  };
+
+  struct rofi_common_opts {
+    std::string prompt;
+    bool        ignorecase;
+    std::string addopts;
+  };
+
+extern std::optional<rofi_result> ask_yn(
+                                         rofi_common_opts& common_opts,
     const std::string& label_y, const std::string& label_n);
 
-extern std::optional<std::string> select_list(
-    const std::string& prompt, const SR::string_vector& sel_list);
+
+extern std::optional<rofi_result> select_list(
+                                              rofi_common_opts& common_opts,
+    const SR::string_vector& sel_list);
 
 }
 
