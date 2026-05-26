@@ -2,6 +2,7 @@
 #define DB_HPP
 
 #include <map>
+#include <optional>
 #include <string>
 #include <time.h>
 #include <vector>
@@ -31,6 +32,18 @@ extern void cleanup();
 extern bool save(const char* filename);
 
 extern bool load(const char* filename);
+
+extern std::optional<db_entry> get(const std::string& cmd);
+
+extern time_t upd_last_epoch(const std::string& cmd);
+
+extern time_t get_last_epoch(const std::string& cmd);
+
+extern run_count_t incr_run_count(
+    const std::string& cmd, const run_type_t run_type);
+
+extern run_type_t get_most_run_type(
+    const std::string& cmd, const run_type_t default_val);
 
 }
 

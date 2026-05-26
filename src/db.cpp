@@ -1,4 +1,5 @@
 #include "db.hpp"
+#include <algorithm>
 
 namespace SR::db {
 db_t v_db;
@@ -95,6 +96,85 @@ bool load(const char* filename)
 
     fclose(fp);
     return true; // ok
+}
+
+std::optional<db_entry> get(const std::string& cmd)
+{
+    auto it = v_db.find(cmd);
+    if (it != v_db.end()) {
+        return std::make_optional(it->second);
+    }
+    return std::nullopt;
+}
+
+time_t get_last_epoch(const std::string& cmd)
+{
+    auto entry_ = get(cmd);
+    if (entry_) {
+        return entry_.value().last_epoch;
+    }
+    return 0;
+}
+
+time_t upd_last_epoch(const std::string& cmd)
+{
+    time_t now = time(nullptr);
+
+    auto entry_ = get(cmd);
+    if (entry_) {
+        entry_.value().last_epoch = now;
+    } else {
+        v_db[cmd] = db_entry {
+            .last_epoch = now,
+            .run_type_counts = std::vector<run_count_t> {},
+        };
+    }
+
+    return now;
+}
+
+run_type_t get_most_run_type(
+    const std::string& cmd, const run_type_t default_val)
+{
+    auto entry_ = get(cmd);
+    if (entry_) {
+        const auto& counts = entry_.value().run_type_counts;
+        if (counts.empty())
+            return default_val;
+
+        const auto it
+            = std::max_element(counts.begin(), counts.end());
+        if (counts.end() == it)
+            return default_val;
+
+        const int idx = std::distance(counts.begin(), it);
+        return static_cast<run_type_t>(idx);
+    }
+    return default_val;
+}
+
+run_count_t incr_run_count(
+    const std::string& cmd, const run_type_t run_type)
+{
+    auto entry_ = get(cmd);
+
+    if (!entry_) {
+        entry_ = std::make_optional(db_entry {
+            .last_epoch = 0,
+            .run_type_counts = std::vector<run_count_t> {},
+        });
+        v_db[cmd] = entry_.value();
+    }
+
+    auto entry = entry_.value();
+    auto size = static_cast<std::vector<run_count_t>::size_type>(
+        run_type + 1);
+    if (entry.run_type_counts.size() < size) {
+        entry.run_type_counts.resize(size, 0);
+    }
+
+    auto new_count = ++entry.run_type_counts[run_type];
+    return new_count;
 }
 
 }
