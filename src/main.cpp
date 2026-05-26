@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 
     if (SR::argp::v_execute) {
         const auto err_msg = SR::exec::execvp(cmdv);
-        // TODO rofi -e "..."
+        SR::rofi::show_error(err_msg);
         exit(EXIT_FAILURE);
     }
 

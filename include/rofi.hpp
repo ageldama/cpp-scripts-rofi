@@ -40,6 +40,8 @@ extern std::optional<rofi_result> select_list(
     const rofi_common_opts& common_opts,
     const SR::string_vector& sel_list);
 
+extern void show_error(const std::string message);
+
 }
 
 #endif /* ROFI_HPP */

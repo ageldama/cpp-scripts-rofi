@@ -84,4 +84,15 @@ std::tuple<bool, int, std::string> run_rofi(
 
     return { true, wstatus, read };
 }
+
+void show_error(const std::string message)
+{
+    SR::string_vector cmdv = {
+        "rofi",
+        "-e",
+        message,
+    };
+
+    SR::rofi::run_rofi(cmdv, [](const int fd) { (void)fd; });
+}
 }
