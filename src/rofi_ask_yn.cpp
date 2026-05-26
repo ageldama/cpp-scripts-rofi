@@ -16,29 +16,34 @@ std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
         "rofi",
         ignorecase_opts,
         common_opts.addopts,
-        "-theme-str",
-        "window {width: 200px; height: 150px;}",
+        //"-theme-str",
+        //"window {width: 200px; height: 150px;}",
         "-dmenu",
         "-p",
         common_opts.prompt,
         "-sep",
         R"(\0)",
-        "-eh",
-        "2",
-        "-markup-rows",
+        //"-eh",
+        //"2",
+        //"-markup-rows",
         "-format",
         "i",
     };
 
-    auto lbl_y = std::string("<span size='x-large' weight='heavy'>")
-        + label_y + std::string("</span>");
-    auto lbl_n = std::string("<span size='x-large' weight='heavy'>")
-        + label_n + std::string("</span>");
+    // auto lbl_y = std::string("<span size='x-large'
+    // weight='heavy'>")
+    //     + label_y + std::string("</span>");
+    // auto lbl_n = std::string("<span size='x-large'
+    // weight='heavy'>")
+    //     + label_n + std::string("</span>");
 
-    auto res = SR::rofi::run_rofi(cmdv, [lbl_y, lbl_n](const int fd) {
-        SR::rofi::pipe_write_and_sepchar(fd, lbl_y.c_str(), '\0');
-        SR::rofi::pipe_write_and_sepchar(fd, lbl_n.c_str(), '\0');
-    });
+    auto res = SR::rofi::run_rofi(
+        cmdv, [&label_y, &label_n](const int fd) {
+            SR::rofi::pipe_write_and_sepchar(
+                fd, label_y.c_str(), '\0');
+            SR::rofi::pipe_write_and_sepchar(
+                fd, label_n.c_str(), '\0');
+        });
 
     bool run_ok = false;
     int run_exitcode = 0;

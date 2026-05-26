@@ -10,6 +10,7 @@
 namespace SR::db {
 
 typedef enum {
+    RUN_UNKNOWN = -1,
     RUN_NORMAL = 0,
     RUN_IN_TERM = 1,
 } run_type_t;

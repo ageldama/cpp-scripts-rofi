@@ -14,14 +14,15 @@ std::optional<SR::db::run_type_t> ask_most_run_type(
     const std::string& cmd, const bool alt)
 {
     const auto most_run_type
-        = SR::db::get_most_run_type(cmd, SR::db::RUN_NORMAL);
+        = SR::db::get_most_run_type(cmd, SR::db::RUN_UNKNOWN);
 
     const auto selected_run_type
         = alt ? SR::db::RUN_IN_TERM : SR::db::RUN_NORMAL;
 
-    SR::db::run_type_t final_run_type = SR::db::RUN_NORMAL;
+    SR::db::run_type_t final_run_type = selected_run_type;
 
-    if (selected_run_type != most_run_type) {
+    if (most_run_type != SR::db::RUN_UNKNOWN
+        && selected_run_type != most_run_type) {
         auto opts_yn = SR::rofi::rofi_common_opts {
             .prompt
             = "Different run type from usual, Correct it usually?",
