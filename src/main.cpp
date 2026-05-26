@@ -21,6 +21,8 @@ std::optional<SR::db::run_type_t> ask_most_run_type(
 
 SR::string_vector sorted_file_list();
 
+void print_dump();
+
 int main(int argc, char* argv[])
 {
     int rc = 0;
@@ -37,7 +39,8 @@ int main(int argc, char* argv[])
         SR::db::load(SR::argp::v_db_file.c_str());
 
     if (SR::argp::v_dump_and_exit) {
-        throw std::invalid_argument("TODO print(db)");
+        print_dump();
+        exit(EXIT_SUCCESS);
     }
 
     //
