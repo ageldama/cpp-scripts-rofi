@@ -26,7 +26,7 @@ CXXFLAGS  += -Iinclude
 CLANG_FORMAT ?= clang-format
 CLANG_TIDY ?= clang-tidy
 BEAR ?= bear
-
+PARALLEL ?= parallel
 
 all: $(TARGET) ## Build
 
@@ -53,4 +53,5 @@ compile_commands.json: ## Build compile_commands.json
 
 .PHONY: lint
 lint: compile_commands.json
-	$(CLANG_TIDY) -p $(PWD) $(SRCS)
+	#--halt now,fail=1
+	$(PARALLEL) --bar --jobs 1 $(CLANG_TIDY) -p $(PWD) -config-file=$(PWD)/.clang-tidy --use-color {} ::: $(SRCS)
