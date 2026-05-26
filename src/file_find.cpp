@@ -4,6 +4,7 @@
 #include <cassert>
 #include <filesystem>
 #include <functional>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -51,12 +52,18 @@ SR::string_vector find_in_directories(const SR::string_vector& dirs,
     SR::string_vector results;
 
     for (const auto& dir : dirs) {
-        for (const auto& entry :
-            fs::recursive_directory_iterator(dir)) {
-            if (entry_pred(entry)) {
-                std::string abs_path = entry.path().string();
-                results.push_back(abs_path);
+        try {
+            for (const auto& entry :
+                fs::recursive_directory_iterator(dir)) {
+                if (entry_pred(entry)) {
+                    std::string abs_path = entry.path().string();
+                    results.push_back(abs_path);
+                }
             }
+        } catch (const fs::filesystem_error& e) {
+            std::cerr << "[IGNORE] " << e.what() << " // "
+                      << e.path1() << " // " << e.code().value()
+                      << " = " << e.code().message() << std::endl;
         }
     }
 

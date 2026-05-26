@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     }
 
     //
-    auto files = sorted_file_list();
+    auto files = std::move(sorted_file_list());
 
     auto opts = SR::rofi::rofi_common_opts {
         .prompt
