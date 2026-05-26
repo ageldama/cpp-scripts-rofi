@@ -24,9 +24,11 @@ endif
 CXXFLAGS  += -Iinclude
 
 CLANG_FORMAT ?= clang-format
+CLANG_TIDY ?= clang-tidy
+BEAR ?= bear
 
 
-all: $(TARGET)
+all: $(TARGET) ## Build
 
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
@@ -34,11 +36,21 @@ $(TARGET): $(OBJS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-clean:
+clean: ## Clean
 	rm -f $(TARGET) $(OBJS)
 
-fmt:
+.PHONY: help
+help: ## Display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+
+
+fmt: ## Reformatting
 	-${CLANG_FORMAT} -i src/*.c src/*.cpp include/*.h include/*.hpp
 
+compile_commands.json: ## Build compile_commands.json
+	-$(RM) compile_commands.json
+	$(BEAR) -- $(MAKE) clean all
 
-
+.PHONY: lint
+lint: compile_commands.json
+	$(CLANG_TIDY) -p.
