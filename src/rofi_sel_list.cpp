@@ -6,11 +6,13 @@ namespace SR::rofi {
 
 using namespace SR;
 
-  std::optional<rofi_result> select_list(const rofi_common_opts& common_opts,
-                                       const SR::string_vector& sel_list)
+std::optional<rofi_result> select_list(
+    const rofi_common_opts& common_opts,
+    const SR::string_vector& sel_list)
 {
     std::string ignorecase_opts = "";
-  if (common_opts.ignorecase) ignorecase_opts = "-i";
+    if (common_opts.ignorecase)
+        ignorecase_opts = "-i";
 
     SR::string_vector cmdv = {
         "rofi",
@@ -27,11 +29,10 @@ using namespace SR;
         R"(Shift+Return)",
     };
 
-
     auto res = SR::rofi::run_rofi(cmdv, [&sel_list](const int fd) {
-      for (const auto &item :sel_list){
-        SR::rofi::pipe_write_and_sepchar(fd, item.c_str(), '\0');
-      }
+        for (const auto& item : sel_list) {
+            SR::rofi::pipe_write_and_sepchar(fd, item.c_str(), '\0');
+        }
     });
 
     bool run_ok = false;
@@ -44,9 +45,11 @@ using namespace SR;
     if (!run_ok || run_exitcode != 0)
         return std::nullopt;
 
-    return std::make_optional(rofi_result{.exitcode= run_exitcode,
-                                          .alt = run_exitcode > 256,
-                                          .stdout = run_stdout_trimmed,});
+    return std::make_optional(rofi_result {
+        .exitcode = run_exitcode,
+        .alt = run_exitcode > 256,
+        .stdout = run_stdout_trimmed,
+    });
 }
 
 }

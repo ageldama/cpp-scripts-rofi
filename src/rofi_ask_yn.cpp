@@ -5,11 +5,12 @@ namespace SR::rofi {
 
 using namespace SR;
 
-  std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
+std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
     const std::string& label_y, const std::string& label_n)
 {
-  std::string ignorecase_opts = "";
-  if (common_opts.ignorecase) ignorecase_opts = "-i";
+    std::string ignorecase_opts = "";
+    if (common_opts.ignorecase)
+        ignorecase_opts = "-i";
 
     SR::string_vector cmdv = {
         "rofi",
@@ -49,11 +50,11 @@ using namespace SR;
     if (!run_ok || run_exitcode != 0)
         return std::nullopt;
 
-    return std::make_optional(rofi_result{
-      .exitcode= run_exitcode,
-      .alt= false,
-      .stdout= run_stdout_trimmed,
-      });
+    return std::make_optional(rofi_result {
+        .exitcode = run_exitcode,
+        .alt = false,
+        .stdout = run_stdout_trimmed,
+    });
 }
 
 }

@@ -36,13 +36,14 @@ int main(int argc, char* argv[])
     auto files = file_find::find_in_directories(
         dirs, file_find::make_only_file_and_regex_match(patterns));
 
-    auto opts = SR::rofi::rofi_common_opts{
-        .prompt= "Select a script to run (Shift-Enter == run-in-terminal)",
-        .ignorecase= true,
+    auto opts = SR::rofi::rofi_common_opts {
+        .prompt
+        = "Select a script to run (Shift-Enter == run-in-terminal)",
+        .ignorecase = true,
     };
     auto res = SR::rofi::select_list(opts, files); // FIXME
 
-    //SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY", "NNNNN");
+    // SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY", "NNNNN");
 
     exit(EXIT_SUCCESS);
 }
