@@ -37,7 +37,7 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean: ## Clean
-	rm -f $(TARGET) $(OBJS)
+	-rm -f $(TARGET) $(OBJS) compile_commands.json
 
 .PHONY: help
 help: ## Display this help
@@ -53,4 +53,4 @@ compile_commands.json: ## Build compile_commands.json
 
 .PHONY: lint
 lint: compile_commands.json
-	$(CLANG_TIDY) -p.
+	$(CLANG_TIDY) -p $(PWD) $(SRCS)
