@@ -36,7 +36,9 @@ extern std::optional<rofi_result> ask_yn(
     rofi_common_opts& common_opts, const std::string& label_y,
     const std::string& label_n);
 
-extern std::optional<rofi_result> select_list(const rofi_common_opts& common_opts, const SR::string_vector& sel_list);
+extern std::optional<rofi_result> select_list(
+    const rofi_common_opts& common_opts,
+    const SR::string_vector& sel_list);
 
 }
 

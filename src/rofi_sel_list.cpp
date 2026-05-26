@@ -44,7 +44,8 @@ std::optional<rofi_result> select_list(
 
     const int magic_exitcode = 256;
 
-    if (!run_ok || (run_exitcode > 0 && run_exitcode <= magic_exitcode))
+    if (!run_ok
+        || (run_exitcode > 0 && run_exitcode <= magic_exitcode))
         return std::nullopt;
 
     return std::make_optional(rofi_result {
