@@ -6,6 +6,7 @@
 #include <string>
 #include <time.h>
 #include <vector>
+#include <cstdint>
 
 namespace SR::db {
 
