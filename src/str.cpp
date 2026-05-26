@@ -1,16 +1,22 @@
 #include "str.hpp"
+#include <algorithm>
 
 namespace SR::str {
 
-std::string trim(const std::string& str)
+const std::string WHITESPACE = " \n\r\t\f\v";
+
+std::string ltrim(const std::string& s)
 {
-    auto is_space = [](unsigned char ch) { return std::isspace(ch); };
-
-    auto view = str | std::views::drop_while(is_space)
-        | std::views::reverse | std::views::drop_while(is_space)
-        | std::views::reverse;
-
-    return std::string(view.begin(), view.end());
+    size_t start = s.find_first_not_of(WHITESPACE);
+    return (start == std::string::npos) ? "" : s.substr(start);
 }
+
+std::string rtrim(const std::string& s)
+{
+    size_t end = s.find_last_not_of(WHITESPACE);
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+std::string trim(const std::string& str) { return rtrim(ltrim(str)); }
 
 }
