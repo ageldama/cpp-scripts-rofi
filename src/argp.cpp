@@ -36,7 +36,7 @@ void init()
 {
     SR::tilde::expand(SCRIPT_ROFI_DB_FLAG_FILE, v_db_file);
 
-    SR::tilde::expand(SCRIPT_ROFI_XTERM_COMMAND, v_term_command);
+    v_term_command.assign(SCRIPT_ROFI_XTERM_COMMAND);
 
     SR::tilde::expand(SCRIPT_ROFI_NO_DB_FLAG_FILE, v_no_db_flag_file);
 
@@ -76,11 +76,11 @@ int parse(const int argc, char* argv[])
             break;
 
         case 'T':
-            SR::tilde::expand(optarg, v_term_command);
+            v_term_command.assign(optarg);
             break;
 
         case 'W':
-            SR::tilde::expand(optarg, v_exec_wrapper);
+            v_exec_wrapper.assign(optarg);
             break;
 
         case '/':
