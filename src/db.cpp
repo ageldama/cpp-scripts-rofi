@@ -1,6 +1,9 @@
 #include "db.hpp"
 #include <algorithm>
+#include <cstring>
+#include <filesystem>
 #include <functional>
+#include <string_view>
 
 namespace SR::db {
 db_t v_db;
@@ -8,6 +11,9 @@ db_t v_db;
 void init() { }
 
 void cleanup() { }
+
+constexpr std::string_view DB_MAGIC = "C-SCRIPTS-ROFI";
+constexpr std::size_t DB_MAGIC_LEN = DB_MAGIC.length();
 
 bool save(const char* filename)
 {
@@ -17,6 +23,9 @@ bool save(const char* filename)
         perror("fopen for write hist");
         return false;
     }
+
+    fwrite(static_cast<const void*>(std::string(DB_MAGIC).c_str()),
+        DB_MAGIC_LEN, 1, fp);
 
     size_t tot = v_db.size();
     fwrite(static_cast<void*>(&tot), sizeof(tot), 1, fp);
@@ -49,13 +58,40 @@ bool save(const char* filename)
     return true; // ok
 }
 
-bool load(const char* filename)
+void load(const char* filename)
 {
+    namespace fs = std::filesystem;
+
+    if (!fs::exists(filename) || !fs::is_regular_file(filename)) {
+        throw FileNotFoundException(filename);
+    }
+
+    if (fs::file_size(filename) < DB_MAGIC_LEN) {
+        throw FileMagicInvalidException(filename);
+    }
+
     FILE* fp = NULL;
     fp = fopen(filename, "rb");
-    if (NULL == fp)
-        return false;
+    if (NULL == fp) {
+        throw FileNotFoundException(filename);
+    }
 
+    // magic header
+    char* magic_buf = static_cast<char*>(malloc(DB_MAGIC_LEN));
+    fread(magic_buf, DB_MAGIC_LEN, 1, fp);
+    bool magic_ok = ::strncmp(std::string(DB_MAGIC).c_str(),
+                        magic_buf, DB_MAGIC_LEN)
+        == 0;
+
+    free(static_cast<void*>(magic_buf));
+
+    if (!magic_ok) {
+        fclose(fp);
+        fp = nullptr;
+        throw FileMagicInvalidException(filename);
+    }
+
+    // total count
     size_t tot_cmd = 0;
     fread(static_cast<void*>(&tot_cmd), sizeof(tot_cmd), 1, fp);
 
@@ -98,7 +134,6 @@ bool load(const char* filename)
     }
 
     fclose(fp);
-    return true; // ok
 }
 
 std::optional<std::reference_wrapper<db_entry>> get(

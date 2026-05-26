@@ -35,8 +35,14 @@ int main(int argc, char* argv[])
     db::init();
     atexit(db::cleanup);
 
-    if (SR::argp::db_load_allowed())
-        SR::db::load(SR::argp::v_db_file.c_str());
+    if (SR::argp::db_load_allowed()) {
+        try {
+            SR::db::load(SR::argp::v_db_file.c_str());
+        } catch (SR::db::FileNotFoundException& exc) {
+            std::cerr << "[IGNORE] load error (file not found)"
+                      << exc.what() << std::endl;
+        }
+    }
 
     if (SR::argp::v_dump_and_exit) {
         print_dump();
@@ -67,7 +73,11 @@ int main(int argc, char* argv[])
     if (SR::argp::db_save_allowed()) {
         SR::db::upd_last_epoch(cmd);
         SR::db::incr_run_count(cmd, final_run_type);
-        SR::db::save(SR::argp::v_db_file.c_str());
+        const auto saved = SR::db::save(SR::argp::v_db_file.c_str());
+        if (!saved) {
+            std::cerr << "[IGNORE] save error: " + SR::argp::v_db_file
+                      << std::endl;
+        }
     }
 
     auto cmdv = SR::string_vector {

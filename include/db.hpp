@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <time.h>
 #include <vector>
@@ -34,7 +35,7 @@ extern void cleanup();
 
 extern bool save(const char* filename);
 
-extern bool load(const char* filename);
+extern void load(const char* filename);
 
 extern std::optional<std::reference_wrapper<db_entry>> get(
     const std::string& cmd);
@@ -48,6 +49,22 @@ extern run_count_t incr_run_count(
 
 extern run_type_t get_most_run_type(
     const std::string& cmd, const run_type_t default_val);
+
+class FileNotFoundException : public std::runtime_error {
+public:
+    FileNotFoundException(const std::string& filename)
+        : std::runtime_error(filename)
+    {
+    }
+};
+
+class FileMagicInvalidException : public std::runtime_error {
+public:
+    FileMagicInvalidException(const std::string& filename)
+        : std::runtime_error(filename)
+    {
+    }
+};
 
 }
 
