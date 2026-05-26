@@ -41,7 +41,12 @@ int main(int argc, char* argv[])
         = "Select a script to run (Shift-Enter == run-in-terminal)",
         .ignorecase = true,
     };
-    auto res = SR::rofi::select_list(opts, files); // FIXME
+    auto res = SR::rofi::select_list(opts, files);
+
+    if(res){
+      printf("exit:%d // alt:%d // cmd:[%s]\n",
+           res.value().exitcode, res.value().alt, res.value().stdout.c_str());
+    }
 
     // SR::rofi::ask_yn("Y/N???", true, "", "YYYYYY", "NNNNN");
 
@@ -53,14 +58,15 @@ int main(int argc, char* argv[])
 
 --- TODOs ------------------------------------------------------------
 
-* rofi : select list
 
 * execvp
 
+* combine it all!
 
 
 --- DONEs ------------------------------------------------------------
 
+* rofi : select list
 * rofi : ask-yn
 
 * arg-parsing

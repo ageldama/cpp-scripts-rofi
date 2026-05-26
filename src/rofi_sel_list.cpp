@@ -42,12 +42,14 @@ std::optional<rofi_result> select_list(
 
     std::string run_stdout_trimmed = str::trim(run_stdout);
 
-    if (!run_ok || run_exitcode != 0)
+    const int magic_exitcode = 256;
+
+    if (!run_ok || (run_exitcode > 0 && run_exitcode <= magic_exitcode))
         return std::nullopt;
 
     return std::make_optional(rofi_result {
         .exitcode = run_exitcode,
-        .alt = run_exitcode > 256,
+        .alt = run_exitcode > magic_exitcode,
         .stdout = run_stdout_trimmed,
     });
 }
