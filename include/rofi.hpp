@@ -33,7 +33,7 @@ struct rofi_common_opts {
 };
 
 extern std::optional<rofi_result> ask_yn(
-    rofi_common_opts& common_opts, const std::string& label_y,
+    const rofi_common_opts& common_opts, const std::string& label_y,
     const std::string& label_n);
 
 extern std::optional<rofi_result> select_list(
