@@ -59,13 +59,12 @@ int main(int argc, char* argv[])
 
 --- TODOs ------------------------------------------------------------
 
-
-* execvp
-
 * combine it all!
 
 
 --- DONEs ------------------------------------------------------------
+
+* execvp
 
 * rofi : select list
 * rofi : ask-yn
