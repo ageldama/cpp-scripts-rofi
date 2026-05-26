@@ -9,22 +9,19 @@ OBJS   = $(SRCS:.cpp=.o)
 
 DEBUG?=1
 
-CFLAGS  += -Wall -Werror -Wpedantic
+CXXFLAGS  += -std=c++20 -Wall -Werror -Wpedantic
 
-#ifeq ($(DEBUG), 1)
-	CFLAGS  += -g -O0
-	CFLAGS  += -fstack-protector
-	CFLAGS  += -fsanitize=address,undefined
+ifeq ($(DEBUG), 1)
+	CXXFLAGS  += -g -O0
+	CXXFLAGS  += -fstack-protector
+	CXXFLAGS  += -fsanitize=address,undefined
 
 	LDFLAGS += -fsanitize=address,undefined
-#else
-	CFLAGS  += -O3
-#endif
+else
+	CXXFLAGS  += -O3
+endif
 
-CFLAGS  += -Iinclude
-
-CXXFLAGS += -std=c++20 $(CFLAGS)
-
+CXXFLAGS  += -Iinclude
 
 CLANG_FORMAT ?= clang-format
 

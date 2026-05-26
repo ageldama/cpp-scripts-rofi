@@ -63,10 +63,10 @@ bool load(const char* filename)
         size_t cmd_len = 0;
         fread(static_cast<void*>(&cmd_len), sizeof(cmd_len), 1, fp);
 
-        char* cmd_buf = new char[cmd_len + 1];
+        char* cmd_buf = static_cast<char*>(malloc(cmd_len + 1));
         fread(static_cast<void*>(cmd_buf), cmd_len, 1, fp);
         std::string cmd(cmd_buf, cmd_len);
-        delete cmd_buf;
+        free(cmd_buf);
 
         //
         db_entry entry;
