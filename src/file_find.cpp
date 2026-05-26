@@ -54,7 +54,9 @@ SR::string_vector find_in_directories(const SR::string_vector& dirs,
     for (const auto& dir : dirs) {
         try {
             for (const auto& entry :
-                fs::recursive_directory_iterator(dir)) {
+                fs::recursive_directory_iterator(dir,
+                    fs::directory_options::
+                        follow_directory_symlink)) {
                 if (entry_pred(entry)) {
                     std::string abs_path = entry.path().string();
                     results.push_back(abs_path);

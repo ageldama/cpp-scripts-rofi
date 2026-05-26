@@ -23,11 +23,10 @@ void expand_buf(const char* inp, char* outp, const size_t outp_size)
 
 void expand(const char* inp, std::string& output)
 {
-    const size_t maxlen = PATH_MAX + 1;
-    char* buf = static_cast<char*>(malloc(maxlen));
-    memset(buf, 0, maxlen);
-    expand_buf(inp, buf, maxlen);
-    output.assign(buf, strnlen(buf, maxlen));
+    char* buf = static_cast<char*>(malloc(PATH_MAX));
+    memset(buf, 0, PATH_MAX);
+    expand_buf(inp, buf, PATH_MAX - 1);
+    output.assign(buf, strnlen(buf, PATH_MAX));
     free(buf);
 }
 }
