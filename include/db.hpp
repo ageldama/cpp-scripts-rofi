@@ -33,22 +33,22 @@ void init();
 
 void cleanup();
 
-bool save(const char* filename);
+auto save(const char* filename) -> bool;
 
 void load(const char* filename);
 
-std::optional<std::reference_wrapper<db_entry>> get(
-    const std::string& cmd);
+auto get(const std::string& cmd)
+    -> std::optional<std::reference_wrapper<db_entry>>;
 
-time_t upd_last_epoch(const std::string& cmd);
+auto upd_last_epoch(const std::string& cmd) -> time_t;
 
-time_t get_last_epoch(const std::string& cmd);
+auto get_last_epoch(const std::string& cmd) -> time_t;
 
-run_count_t incr_run_count(
-    const std::string& cmd, const run_type_t run_type);
+auto incr_run_count(const std::string& cmd, run_type_t run_type)
+    -> run_count_t;
 
-run_type_t get_most_run_type(
-    const std::string& cmd, const run_type_t default_val);
+auto get_most_run_type(const std::string& cmd, run_type_t default_val)
+    -> run_type_t;
 
 class FileNotFoundException : public std::runtime_error {
 public:

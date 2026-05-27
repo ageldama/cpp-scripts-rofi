@@ -7,21 +7,25 @@ namespace SR::str {
 
 const std::string whitespace = " \n\r\t\f\v";
 
-std::string ltrim(const std::string& s)
+auto ltrim(const std::string& s) -> std::string
 {
     size_t start = s.find_first_not_of(whitespace);
     return (start == std::string::npos) ? "" : s.substr(start);
 }
 
-std::string rtrim(const std::string& s)
+auto rtrim(const std::string& s) -> std::string
 {
     size_t end = s.find_last_not_of(whitespace);
     return (end == std::string::npos) ? "" : s.substr(0, end + 1);
 }
 
-std::string trim(const std::string& str) { return rtrim(ltrim(str)); }
+auto trim(const std::string& str) -> std::string
+{
+    return rtrim(ltrim(str));
+}
 
-SR::string_vector split_tokens(const std::string& s, const char sep)
+auto split_tokens(const std::string& s, const char sep)
+    -> SR::string_vector
 {
     std::stringstream ss(s);
     std::string token;

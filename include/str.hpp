@@ -10,14 +10,16 @@
 
 namespace SR::str {
 
-std::string trim(const std::string& str);
+auto trim(const std::string& str) -> std::string;
 
-SR::string_vector tokenize_commandline(const std::string& cmdline);
+auto tokenize_commandline(const std::string& cmdline)
+    -> SR::string_vector;
 
 void tokenize_cmd_and_prepend(
     SR::string_vector& target, const std::string& cmdline);
 
-SR::string_vector split_tokens(const std::string& s, const char sep);
+auto split_tokens(const std::string& s, char sep)
+    -> SR::string_vector;
 
 }
 

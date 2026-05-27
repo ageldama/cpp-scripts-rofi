@@ -5,8 +5,9 @@ namespace SR::rofi {
 
 using namespace SR;
 
-std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
+auto ask_yn(const rofi_common_opts& common_opts,
     const std::string& label_y, const std::string& label_n)
+    -> std::optional<rofi_result>
 {
     std::string ignorecase_opts;
     if (common_opts.ignorecase) {

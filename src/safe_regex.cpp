@@ -10,7 +10,7 @@ void regex_deleter::operator()(regex_t* r) const
     }
 }
 
-regex_ptr make_regex_ptr(const char* pattern)
+auto make_regex_ptr(const char* pattern) -> regex_ptr
 {
     regex_ptr ptr(new regex_t(), regex_deleter());
 

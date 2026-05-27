@@ -16,13 +16,14 @@
 using namespace std;
 using namespace SR;
 
-std::optional<SR::db::run_type_t> ask_most_run_type(
-    const std::string& cmd, const bool alt);
+auto ask_most_run_type(const std::string& cmd, bool alt)
+    -> std::optional<SR::db::run_type_t>;
 
-SR::string_vector sorted_file_list();
+auto sorted_file_list() -> SR::string_vector;
 
 void print_dump();
 
+// NOLINT(bugprone-exception-escape)
 int main(int argc, char** argv)
 {
     int rc = 0;

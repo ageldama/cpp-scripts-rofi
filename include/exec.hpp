@@ -5,7 +5,7 @@
 #include <string>
 
 namespace SR::exec {
-std::string execvp(const string_vector& cmdv);
+auto execvp(const string_vector& cmdv) -> std::string;
 }
 
 #endif /* EXEC_HPP */

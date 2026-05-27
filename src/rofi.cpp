@@ -10,13 +10,13 @@
 
 namespace SR::rofi {
 
-ssize_t pipe_write(const int fd, const char* s)
+auto pipe_write(const int fd, const char* s) -> ssize_t
 {
     return write(fd, s, strlen(s));
 }
 
-ssize_t pipe_write_and_sepchar(
-    const int fd, const char* s, const char sep)
+auto pipe_write_and_sepchar(
+    const int fd, const char* s, const char sep) -> ssize_t
 {
     ssize_t written = pipe_write(fd, s);
     std::array<char, 1> buf { sep };
@@ -24,7 +24,7 @@ ssize_t pipe_write_and_sepchar(
     return written;
 }
 
-std::string read_all_fd(int fd)
+auto read_all_fd(int fd) -> std::string
 {
     std::string result;
     constexpr size_t buflen = 4096;
@@ -38,8 +38,9 @@ std::string read_all_fd(int fd)
     return result;
 }
 
-std::tuple<bool, int, std::string> run_rofi(
+auto run_rofi(
     const SR::string_vector& cmdv, const rofi_write_fn& write_fn)
+    -> std::tuple<bool, int, std::string>
 {
     std::array<int, 2> p_to_c; // parent => child
     std::array<int, 2> c_to_p; // child => parent
@@ -87,7 +88,7 @@ std::tuple<bool, int, std::string> run_rofi(
     return { true, wstatus, read };
 }
 
-void show_error(const std::string message)
+void show_error(const std::string& message)
 {
     SR::string_vector cmdv = {
         "rofi",

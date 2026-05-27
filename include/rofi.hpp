@@ -11,14 +11,15 @@ namespace SR::rofi {
 
 using rofi_write_fn = std::function<void(const int fd)>;
 
-ssize_t pipe_write(const int fd, const char* s);
-ssize_t pipe_write_and_sepchar(
-    const int fd, const char* s, const char sep);
+auto pipe_write(int fd, const char* s) -> ssize_t;
+auto pipe_write_and_sepchar(int fd, const char* s, char sep)
+    -> ssize_t;
 
-std::string read_all_fd(int fd);
+auto read_all_fd(int fd) -> std::string;
 
-std::tuple<bool, int, std::string> run_rofi(
-    const SR::string_vector& cmdv, const rofi_write_fn& write_fn);
+auto run_rofi(
+    const SR::string_vector& cmdv, const rofi_write_fn& write_fn)
+    -> std::tuple<bool, int, std::string>;
 
 struct rofi_result {
     int exitcode;
@@ -32,14 +33,14 @@ struct rofi_common_opts {
     std::string addopts;
 };
 
-std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
-    const std::string& label_y, const std::string& label_n);
+auto ask_yn(const rofi_common_opts& common_opts,
+    const std::string& label_y, const std::string& label_n)
+    -> std::optional<rofi_result>;
 
-std::optional<rofi_result> select_list(
-    const rofi_common_opts& common_opts,
-    const SR::string_vector& sel_list);
+auto select_list(const rofi_common_opts& common_opts,
+    const SR::string_vector& sel_list) -> std::optional<rofi_result>;
 
-void show_error(const std::string message);
+void show_error(const std::string& message);
 
 }
 

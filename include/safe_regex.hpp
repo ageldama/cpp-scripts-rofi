@@ -14,7 +14,7 @@ struct regex_deleter {
 // 하고... C++23.
 using regex_ptr = std::shared_ptr<regex_t>;
 
-regex_ptr make_regex_ptr(const char* pattern);
+auto make_regex_ptr(const char* pattern) -> regex_ptr;
 
 }
 

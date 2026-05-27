@@ -5,7 +5,8 @@
 
 namespace SR::str {
 
-SR::string_vector tokenize_commandline(const std::string& cmdline)
+auto tokenize_commandline(const std::string& cmdline)
+    -> SR::string_vector
 {
     std::stringstream iss(cmdline);
     return { std::istream_iterator<std::string> { iss },

@@ -11,13 +11,13 @@ namespace SR::file_find {
 using directory_entry_predicate
     = std::function<bool(const std::filesystem::directory_entry&)>;
 
-SR::string_vector find_in_directories(
-    const string_vector& dirs, const directory_entry_predicate& pred);
+auto find_in_directories(const string_vector& dirs,
+    const directory_entry_predicate& pred) -> SR::string_vector;
 
-bool only_file(const std::filesystem::directory_entry& entry);
+auto only_file(const std::filesystem::directory_entry& entry) -> bool;
 
-directory_entry_predicate make_only_file_and_regex_match(
-    const SR::string_vector regexes);
+auto make_only_file_and_regex_match(const SR::string_vector& regexes)
+    -> directory_entry_predicate;
 }
 
 #endif /* FILE_FIND_HPP */

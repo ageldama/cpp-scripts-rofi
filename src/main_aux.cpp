@@ -11,8 +11,8 @@
 
 using namespace SR;
 
-std::optional<SR::db::run_type_t> ask_most_run_type(
-    const std::string& cmd, const bool alt)
+auto ask_most_run_type(const std::string& cmd, const bool alt)
+    -> std::optional<SR::db::run_type_t>
 {
     const auto most_run_type
         = SR::db::get_most_run_type(cmd, SR::db::RUN_UNKNOWN);
@@ -52,7 +52,7 @@ std::optional<SR::db::run_type_t> ask_most_run_type(
     return std::make_optional(final_run_type);
 }
 
-SR::string_vector sorted_file_list()
+auto sorted_file_list() -> SR::string_vector
 {
     auto files = string_vector {};
 

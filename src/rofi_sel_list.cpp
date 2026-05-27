@@ -6,9 +6,8 @@ namespace SR::rofi {
 
 using namespace SR;
 
-std::optional<rofi_result> select_list(
-    const rofi_common_opts& common_opts,
-    const SR::string_vector& sel_list)
+auto select_list(const rofi_common_opts& common_opts,
+    const SR::string_vector& sel_list) -> std::optional<rofi_result>
 {
     std::string ignorecase_opts;
     if (common_opts.ignorecase) {

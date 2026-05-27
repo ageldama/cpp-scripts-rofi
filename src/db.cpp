@@ -15,7 +15,7 @@ void cleanup() { }
 constexpr std::string_view db_magic = "C-SCRIPTS-ROFI";
 constexpr std::size_t db_magic_len = db_magic.length();
 
-bool save(const char* filename)
+auto save(const char* filename) -> bool
 {
     FILE* fp = nullptr;
     fp = fopen(filename, "wb");
@@ -136,8 +136,8 @@ void load(const char* filename)
     fclose(fp);
 }
 
-std::optional<std::reference_wrapper<db_entry>> get(
-    const std::string& cmd)
+auto get(const std::string& cmd)
+    -> std::optional<std::reference_wrapper<db_entry>>
 {
     auto it = v_db.find(cmd);
     if (it != v_db.end()) {
@@ -146,7 +146,7 @@ std::optional<std::reference_wrapper<db_entry>> get(
     return std::nullopt;
 }
 
-time_t get_last_epoch(const std::string& cmd)
+auto get_last_epoch(const std::string& cmd) -> time_t
 {
     auto entry_opt = get(cmd);
     if (entry_opt) {
@@ -156,7 +156,7 @@ time_t get_last_epoch(const std::string& cmd)
     return 0;
 }
 
-time_t upd_last_epoch(const std::string& cmd)
+auto upd_last_epoch(const std::string& cmd) -> time_t
 {
     time_t now = time(nullptr);
 
@@ -174,8 +174,8 @@ time_t upd_last_epoch(const std::string& cmd)
     return now;
 }
 
-run_type_t get_most_run_type(
-    const std::string& cmd, const run_type_t default_val)
+auto get_most_run_type(const std::string& cmd,
+    const run_type_t default_val) -> run_type_t
 {
     auto entry_opt = get(cmd);
     if (entry_opt) {
@@ -197,8 +197,8 @@ run_type_t get_most_run_type(
     return default_val;
 }
 
-run_count_t incr_run_count(
-    const std::string& cmd, const run_type_t run_type)
+auto incr_run_count(const std::string& cmd, const run_type_t run_type)
+    -> run_count_t
 {
     auto entry_opt = get(cmd);
 

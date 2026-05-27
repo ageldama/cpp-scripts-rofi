@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 namespace SR::exec {
-std::string execvp(const string_vector& cmdv)
+auto execvp(const string_vector& cmdv) -> std::string
 {
     char** args = static_cast<char**>(
         malloc((cmdv.size() + 1) * sizeof(char*)));

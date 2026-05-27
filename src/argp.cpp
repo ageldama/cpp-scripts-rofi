@@ -45,7 +45,7 @@ void init()
 
 void cleanup() { }
 
-int parse(const std::span<char*> argv)
+auto parse(const std::span<char*> argv) -> int
 {
     int opt;
     while (
@@ -154,7 +154,7 @@ void set_script_dirs(const char* arg)
 
 namespace fs = std::filesystem;
 
-bool db_load_allowed()
+auto db_load_allowed() -> bool
 {
     if (!v_db_file.empty()) {
         return false;
@@ -165,6 +165,6 @@ bool db_load_allowed()
     return true;
 }
 
-extern bool db_save_allowed() { return db_load_allowed() && v_save; }
+auto db_save_allowed() -> bool { return db_load_allowed() && v_save; }
 
 }
