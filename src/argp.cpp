@@ -45,7 +45,7 @@ void init()
 
 void cleanup() { }
 
-auto parse(const std::span<char*> argv) -> int
+auto parse(const std::span<char*>& argv) -> int
 {
     int opt;
     while (

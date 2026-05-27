@@ -23,9 +23,8 @@ auto sorted_file_list() -> SR::string_vector;
 
 void print_dump();
 
-// NOLINT(bugprone-exception-escape)
-int main(int argc, char** argv)
-{
+auto main(int argc, char** argv) -> int
+{ // NOLINT(bugprone-exception-escape)
     int rc = 0;
 
     auto args = std::span<char*>(argv, argc);

@@ -20,7 +20,7 @@ extern std::string v_no_db_flag_file;
 
 void init();
 void cleanup();
-auto parse(const std::span<char*> argv) -> int;
+auto parse(const std::span<char*>& argv) -> int;
 void print_usage(FILE* fp);
 
 void set_file_regexes(const char* arg);
