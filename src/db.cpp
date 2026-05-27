@@ -12,7 +12,7 @@ void init() { }
 
 void cleanup() { }
 
-constexpr std::string_view db_magic = "C-SCRIPTS-ROFI";
+constexpr std::string_view db_magic = "C-SCRIPTS-ROFI-2.0";
 constexpr std::size_t db_magic_len = db_magic.length();
 
 auto save(const char* filename) -> bool
