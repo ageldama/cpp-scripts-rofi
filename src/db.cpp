@@ -1,9 +1,6 @@
 #include "db.hpp"
-#include <algorithm>
 #include <cstring>
 #include <filesystem>
-#include <functional>
-#include <string_view>
 
 namespace SR::db {
 db_t v_db;
@@ -41,15 +38,9 @@ auto save(const char* filename) -> bool
         fwrite(static_cast<const void*>(&(entry.last_epoch)),
             sizeof(time_t), 1, fp);
 
-        // run_type_counts
-        size_t tot_run_types = entry.run_type_counts.size();
-        fwrite(static_cast<void*>(&tot_run_types), sizeof(size_t), 1,
-            fp);
-
-        for (const auto& run_type_count : entry.run_type_counts) {
-            fwrite(static_cast<const void*>(&run_type_count),
-                sizeof(run_count_t), 1, fp);
-        }
+        // run_alt
+        uint8_t run_alt_i = static_cast<uint8_t>(entry.run_alt);
+        fwrite(&run_alt_i, sizeof(uint8_t), 1, fp);
     }
 
     fclose(fp);
@@ -115,19 +106,9 @@ void load(const char* filename)
         fread(static_cast<time_t*>(&epoch), sizeof(epoch), 1, fp);
         entry.last_epoch = epoch;
 
-        // run_type_counts
-        size_t tot_run_type_counts = 0;
-        fread(static_cast<void*>(&tot_run_type_counts),
-            sizeof(tot_run_type_counts), 1, fp);
-
-        for (size_t i_run_type_count = 0;
-             i_run_type_count < tot_run_type_counts;
-             i_run_type_count++) {
-            run_count_t run_count = 0;
-            fread(static_cast<void*>(&run_count), sizeof(run_count),
-                1, fp);
-            entry.run_type_counts.push_back(run_count);
-        }
+        // run_alt
+        uint8_t run_alt_i = 0;
+        fread(&run_alt_i, sizeof(uint8_t), 1, fp);
 
         //
         v_db.insert_or_assign(cmd, entry);
@@ -167,58 +148,42 @@ auto upd_last_epoch(const std::string& cmd) -> time_t
     } else {
         v_db[cmd] = db_entry {
             .last_epoch = now,
-            .run_type_counts = std::vector<run_count_t> {},
+            .run_alt = false,
         };
     }
 
     return now;
 }
 
-auto get_most_run_type(const std::string& cmd,
-    const run_type_t default_val) -> run_type_t
+auto set_run_alt(const std::string& cmd, const bool run_alt) -> bool
+{
+    auto entry_opt = get(cmd);
+    if (entry_opt) {
+        db_entry& entry_ref = entry_opt.value();
+        entry_ref.run_alt = run_alt;
+    } else {
+        v_db[cmd] = db_entry {
+            .last_epoch = 0,
+            .run_alt = run_alt,
+        };
+    }
+    return run_alt;
+}
+
+auto is_run_alt(const std::string& cmd) -> bool
 {
     auto entry_opt = get(cmd);
     if (entry_opt) {
         const db_entry& entry_ref = entry_opt.value();
-        const auto& counts = entry_ref.run_type_counts;
-        if (counts.empty()) {
-            return default_val;
-        }
-
-        const auto it
-            = std::max_element(counts.begin(), counts.end());
-        if (counts.end() == it) {
-            return default_val;
-        }
-
-        const auto idx = std::distance(counts.begin(), it);
-        return static_cast<run_type_t>(idx);
+        return entry_ref.run_alt;
     }
-    return default_val;
+    return false;
 }
 
-auto incr_run_count(const std::string& cmd, const run_type_t run_type)
-    -> run_count_t
+auto toggle_run_alt(const std::string& cmd) -> bool
 {
-    auto entry_opt = get(cmd);
-
-    if (!entry_opt) {
-        auto entry = db_entry {
-            .last_epoch = 0,
-            .run_type_counts = std::vector<run_count_t> {},
-        };
-        v_db[cmd] = entry;
-        entry_opt = entry;
-    }
-
-    db_entry& entry = entry_opt.value();
-    const std::vector<run_count_t>::size_type size = run_type + 1;
-    if (entry.run_type_counts.size() < size) {
-        entry.run_type_counts.resize(size, 0);
-    }
-
-    auto new_count = ++entry.run_type_counts[run_type];
-    return new_count;
+    const auto curr = is_run_alt(cmd);
+    return set_run_alt(cmd, !curr);
 }
 
 }

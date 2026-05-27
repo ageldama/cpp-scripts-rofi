@@ -3,26 +3,16 @@
 
 #include <cstdint>
 #include <ctime>
-#include <functional>
 #include <map>
 #include <optional>
 #include <stdexcept>
 #include <string>
-#include <vector>
 
 namespace SR::db {
 
-enum run_type_t {
-    RUN_UNKNOWN = -1,
-    RUN_NORMAL = 0,
-    RUN_IN_TERM = 1,
-};
-
-using run_count_t = uint32_t;
-
 struct db_entry {
     time_t last_epoch;
-    std::vector<run_count_t> run_type_counts;
+    bool run_alt;
 };
 
 using db_t = std::map<std::string, db_entry>;
@@ -44,11 +34,11 @@ auto upd_last_epoch(const std::string& cmd) -> time_t;
 
 auto get_last_epoch(const std::string& cmd) -> time_t;
 
-auto incr_run_count(const std::string& cmd, run_type_t run_type)
-    -> run_count_t;
+auto set_run_alt(const std::string& cmd, bool run_alt) -> bool;
 
-auto get_most_run_type(const std::string& cmd, run_type_t default_val)
-    -> run_type_t;
+auto toggle_run_alt(const std::string& cmd) -> bool;
+
+auto is_run_alt(const std::string& cmd) -> bool;
 
 class FileNotFoundException : public std::runtime_error {
 public:

@@ -26,7 +26,7 @@ if(CLANG_FORMAT_EXE)
 
   file(GLOB_RECURSE ALL_FORMAT_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
   )
 
   add_custom_target(fmt
