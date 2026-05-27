@@ -189,7 +189,7 @@ run_type_t get_most_run_type(
         if (counts.end() == it)
             return default_val;
 
-        const int idx = std::distance(counts.begin(), it);
+        const auto idx = std::distance(counts.begin(), it);
         return static_cast<run_type_t>(idx);
     }
     return default_val;
@@ -210,8 +210,7 @@ run_count_t incr_run_count(
     }
 
     db_entry& entry = entry_opt.value();
-    auto size = static_cast<std::vector<run_count_t>::size_type>(
-        run_type + 1);
+    const std::vector<run_count_t>::size_type size = run_type + 1;
     if (entry.run_type_counts.size() < size) {
         entry.run_type_counts.resize(size, 0);
     }
