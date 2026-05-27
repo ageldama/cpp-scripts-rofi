@@ -11,8 +11,10 @@ auto execvp(const string_vector& cmdv) -> std::string
     char** args = static_cast<char**>(
         malloc((cmdv.size() + 1) * sizeof(char*)));
     for (SR::string_vector::size_type i = 0; i < cmdv.size(); i++) {
+        // fprintf(stderr, "%s\n", cmdv[i].c_str());
         args[i] = const_cast<char*>(cmdv[i].c_str());
     }
+    // fprintf(stderr, ".\n");
     args[cmdv.size()] = nullptr;
     int rc = ::execvp(args[0], args);
     (void)rc;
