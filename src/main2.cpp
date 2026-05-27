@@ -66,7 +66,7 @@ void main2(const std::span<char*>& args)
 
     if (argp::db_save_allowed()) {
         db::upd_last_epoch(cmd);
-        db::set_run_alt(cmd, run_alt);
+        // db::set_run_alt(cmd, run_alt);
         const auto saved = db::save(argp::v_db_file.c_str());
         if (!saved) {
             cerr << "[IGNORE] save error: " + argp::v_db_file << endl;
