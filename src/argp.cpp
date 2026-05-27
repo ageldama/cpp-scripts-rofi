@@ -1,10 +1,10 @@
 #include <cstdio>
 #include <cstdlib>
-#include <unistd.h>
-
-#include <string>
-
 #include <filesystem>
+#include <limits>
+#include <stdexcept>
+#include <string>
+#include <unistd.h>
 
 #include "string_vector.hpp"
 
@@ -45,11 +45,17 @@ void init()
 
 void cleanup() { }
 
-auto parse(const std::span<char*>& argv) -> int
+auto parse(const std::span<char*>& args) -> int
 {
+    if (args.size()
+        > static_cast<size_t>(std::numeric_limits<int>::max())) {
+        throw std::overflow_error(
+            "Span size exceeds max value of int");
+    }
+
     int opt;
-    while (
-        (opt = getopt(argv.size(), argv.data(), "?hpsePS:D:T:W:/:i"))
+    while ((opt = getopt(static_cast<int>(args.size()), args.data(),
+                "?hpsePS:D:T:W:/:i"))
         != -1) {
         switch (opt) {
         case 's':

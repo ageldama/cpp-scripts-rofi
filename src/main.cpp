@@ -24,7 +24,7 @@ auto sorted_file_list() -> SR::string_vector;
 void print_dump();
 
 auto main(int argc, char** argv) -> int
-{ // NOLINT(bugprone-exception-escape)
+{
     int rc = 0;
 
     auto args = std::span<char*>(argv, argc);
@@ -41,7 +41,7 @@ auto main(int argc, char** argv) -> int
         try {
             SR::db::load(SR::argp::v_db_file.c_str());
         } catch (SR::db::FileNotFoundException& exc) {
-            std::cerr << "[IGNORE] load error (file not found)"
+            std::cerr << "[IGNORE] load error (file not found) "
                       << exc.what() << std::endl;
         }
     }
