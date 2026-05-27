@@ -45,11 +45,12 @@ void init()
 
 void cleanup() { }
 
-int parse(const int argc, char* argv[])
+int parse(const std::span<char*> argv)
 {
     int opt;
-
-    while ((opt = getopt(argc, argv, "?hpsePS:D:T:W:/:i")) != -1) {
+    while (
+        (opt = getopt(argv.size(), argv.data(), "?hpsePS:D:T:W:/:i"))
+        != -1) {
         switch (opt) {
         case 's':
             v_save = true;

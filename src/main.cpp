@@ -23,13 +23,15 @@ SR::string_vector sorted_file_list();
 
 void print_dump();
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     int rc = 0;
 
+    auto args = std::span<char*>(argv, argc);
+
     argp::init();
     atexit(argp::cleanup);
-    rc = argp::parse(argc, argv);
+    rc = argp::parse(args);
     (void)rc;
 
     db::init();

@@ -3,6 +3,7 @@
 
 #include "string_vector.hpp"
 #include <cstdio>
+#include <span>
 
 namespace SR::argp {
 extern bool v_print;
@@ -19,7 +20,7 @@ extern std::string v_no_db_flag_file;
 
 void init();
 void cleanup();
-int parse(const int argc, char* argv[]);
+int parse(const std::span<char*> argv);
 void print_usage(FILE* fp);
 
 void set_file_regexes(const char* arg);
