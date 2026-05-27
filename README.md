@@ -24,3 +24,14 @@ It asks to select a script within SCRIPT_DIRS and execute it.
 
 Exiting.
 ```
+
+
+## Build
+
+* GNU g++ 11 or Clang++ 13 (C++ 20)
+* CMake 3.15+ and GNU Make or Ninja
+
+```bash
+cmake # -DCMAKE_BUILD_TYPE=Debug|Release
+make  # => will build the executable: `scripts-rofi`
+```

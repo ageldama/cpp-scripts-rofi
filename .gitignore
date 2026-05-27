@@ -56,3 +56,9 @@ dkms.conf
 /scripts-rofi
 /TAGS
 /compile_commands.json
+
+
+/CMakeCache.txt
+/CMakeFiles/
+/Makefile
+/cmake_install.cmake
