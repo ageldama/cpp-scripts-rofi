@@ -47,8 +47,8 @@ public:
 };
 
 auto select_list(const rofi_common_opts& common_opts,
-    const run_alt_callbacks& callbacks,
-    const SR::string_vector& sel_list) -> std::optional<rofi_result>;
+    run_alt_callbacks& callbacks, const SR::string_vector& sel_list)
+    -> std::optional<rofi_result>;
 
 }
 
