@@ -16,34 +16,39 @@
 #include "rofi.hpp"
 #include "str.hpp"
 
+namespace SR {
 void main2(const std::span<char*>& args)
 {
+    using namespace std;
+    using namespace SR;
+
     int rc = 0;
 
-    SR::argp::init();
-    atexit(SR::argp::cleanup);
-    rc = SR::argp::parse(args);
+    argp::init();
+    ::atexit(argp::cleanup);
+    rc = argp::parse(args);
     (void)rc;
 
-    SR::db::init();
-    atexit(SR::db::cleanup);
+    db::init();
+    ::atexit(db::cleanup);
 
-    if (SR::argp::db_load_allowed()) {
+    if (argp::db_load_allowed()) {
         try {
-            SR::db::load(SR::argp::v_db_file.c_str());
-        } catch (SR::db::FileNotFoundException& exc) {
-            std::cerr << "[IGNORE] load error (file not found) "
-                      << exc.what() << std::endl;
+            db::load(argp::v_db_file.c_str());
+        } catch (db::FileNotFoundException& exc) {
+            cerr << "[IGNORE] load error (file not found) "
+                 << exc.what() << endl;
         }
     }
 
-    if (SR::argp::v_dump_and_exit) {
+    if (argp::v_dump_and_exit) {
         print_dump();
     }
 
     //
     auto files = sorted_file_list();
 
+#if 0
     auto opts = SR::rofi::rofi_common_opts {
         .prompt
         = "Select a script to run (Shift-Enter == run-in-terminal)",
@@ -62,43 +67,45 @@ void main2(const std::span<char*>& args)
             "User cancelled (ask_most_run_type)");
     }
     const auto final_run_type = final_run_type_opt.value();
+#endif
 
-    if (SR::argp::db_save_allowed()) {
-        SR::db::upd_last_epoch(cmd);
-        SR::db::incr_run_count(cmd, final_run_type);
-        const auto saved = SR::db::save(SR::argp::v_db_file.c_str());
+    const std::string cmd; // FIXME
+    const bool run_alt = false; // FIXME
+
+    if (argp::db_save_allowed()) {
+        db::upd_last_epoch(cmd);
+        db::set_run_alt(cmd, run_alt);
+        const auto saved = db::save(argp::v_db_file.c_str());
         if (!saved) {
-            std::cerr << "[IGNORE] save error: " + SR::argp::v_db_file
-                      << std::endl;
+            cerr << "[IGNORE] save error: " + argp::v_db_file << endl;
         }
     }
 
-    auto cmdv = SR::string_vector {
+    auto cmdv = string_vector {
         cmd,
     };
 
-    if (!SR::argp::v_exec_wrapper.empty()) {
-        SR::str::tokenize_cmd_and_prepend(
-            cmdv, SR::argp::v_exec_wrapper);
+    if (!argp::v_exec_wrapper.empty()) {
+        str::tokenize_cmd_and_prepend(cmdv, argp::v_exec_wrapper);
     }
 
-    if (final_run_type == SR::db::RUN_IN_TERM) {
-        SR::str::tokenize_cmd_and_prepend(
-            cmdv, SR::argp::v_term_command);
+    if (run_alt) {
+        str::tokenize_cmd_and_prepend(cmdv, argp::v_term_command);
     }
 
-    if (SR::argp::v_print) {
+    if (argp::v_print) {
         for (const auto& cmd : cmdv) {
-            std::cout << cmd << " ";
+            cout << cmd << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 
-    if (SR::argp::v_execute) {
-        const auto err_msg = SR::exec::execvp(cmdv);
-        SR::rofi::show_error(err_msg);
-        throw std::runtime_error("execvp fail: " + err_msg);
+    if (argp::v_execute) {
+        const auto err_msg = exec::execvp(cmdv);
+        rofi::show_error(err_msg);
+        throw runtime_error("execvp fail: " + err_msg);
     }
 
     // all ok
+}
 }

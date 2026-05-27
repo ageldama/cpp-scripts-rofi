@@ -1,57 +1,13 @@
 #include <algorithm>
 #include <iostream>
-#include <optional>
 #include <string>
 
 #include "argp.hpp"
 #include "db.hpp"
 #include "file_find.hpp"
-#include "rofi.hpp"
 #include "string_vector.hpp"
 
-using namespace SR;
-
-auto ask_most_run_type(const std::string& cmd, const bool alt)
-    -> std::optional<SR::db::run_type_t>
-{
-    const auto most_run_type
-        = SR::db::get_most_run_type(cmd, SR::db::RUN_UNKNOWN);
-
-    const auto selected_run_type
-        = alt ? SR::db::RUN_IN_TERM : SR::db::RUN_NORMAL;
-
-    SR::db::run_type_t final_run_type = selected_run_type;
-
-    if (most_run_type != SR::db::RUN_UNKNOWN
-        && selected_run_type != most_run_type) {
-        auto opts_yn = SR::rofi::rofi_common_opts {
-            .prompt
-            = "Different run type from usual, Correct it usually?",
-            .ignorecase = SR::argp::v_ignorecase,
-        };
-        const std::string run_normal("No Terminal");
-        const std::string run_in_term("In terminal");
-        const auto lbl_y = most_run_type == SR::db::RUN_NORMAL
-            ? run_normal
-            : run_in_term;
-        const auto lbl_n = most_run_type == SR::db::RUN_NORMAL
-            ? run_in_term
-            : run_normal;
-        auto res_yn = SR::rofi::ask_yn(opts_yn, lbl_y, lbl_n);
-        if (res_yn) {
-            if (res_yn.value().stdout == "0") {
-                final_run_type = most_run_type;
-            } else {
-                final_run_type = selected_run_type;
-            }
-        } else {
-            return std::nullopt;
-        }
-    }
-
-    return std::make_optional(final_run_type);
-}
-
+namespace SR {
 auto sorted_file_list() -> SR::string_vector
 {
     auto files = string_vector {};
@@ -117,14 +73,7 @@ void print_dump()
         cout << count << "/" << db_tot << "\t" << cmd_pair.first
              << endl;
         cout << "\tlast =\t" << cmd_pair.second.last_epoch << endl;
-        cout << "\trun_type_counts# =\t"
-             << cmd_pair.second.run_type_counts.size() << endl;
-        size_t run_type_idx = 0;
-        for (const auto& run_type_count :
-            cmd_pair.second.run_type_counts) {
-            cout << "\trun-type:" << run_type_idx << " =\t"
-                 << run_type_count << endl;
-            run_type_idx++;
-        }
+        cout << "\trun_alt =\t" << cmd_pair.second.run_alt << endl;
     }
+}
 }
