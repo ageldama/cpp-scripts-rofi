@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #include "argp.hpp"
+#include "db+rofi.hpp"
 #include "db.hpp"
 #include "exec.hpp"
 #include "file_find.hpp"
@@ -48,29 +49,20 @@ void main2(const std::span<char*>& args)
     //
     auto files = sorted_file_list();
 
-#if 0
     auto opts = SR::rofi::rofi_common_opts {
         .prompt
-        = "Select a script to run (Shift-Enter == run-in-terminal)",
+        = "Select a script to run (Shift-Enter == toggle:terminal)",
         .ignorecase = SR::argp::v_ignorecase,
+        .addopts = std::string(),
     };
-    auto res = SR::rofi::select_list(opts, files);
+    SR::db::db_run_alt_callbacks cbs;
+    auto res = SR::rofi::select_list(opts, cbs, files);
     if (!res) {
         throw std::runtime_error("User cancelled (select_list)");
     }
 
     const auto cmd = res.value().stdout;
-    const auto final_run_type_opt
-        = ask_most_run_type(cmd, res.value().alt);
-    if (!final_run_type_opt) {
-        throw std::runtime_error(
-            "User cancelled (ask_most_run_type)");
-    }
-    const auto final_run_type = final_run_type_opt.value();
-#endif
-
-    const std::string cmd; // FIXME
-    const bool run_alt = false; // FIXME
+    const bool run_alt = res.value().alt;
 
     if (argp::db_save_allowed()) {
         db::upd_last_epoch(cmd);
