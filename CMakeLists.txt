@@ -42,18 +42,34 @@ endif()
 find_program(CLANG_TIDY_EXE NAMES clang-tidy)
 
 if(CLANG_TIDY_EXE)
-    message(STATUS "Found clang-tidy: ${CLANG_TIDY_EXE}")
+  message(STATUS "Found clang-tidy: ${CLANG_TIDY_EXE}")
 
-    file(GLOB_RECURSE ALL_TIDY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+  file(GLOB_RECURSE ALL_TIDY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-    add_custom_target(tidy
-        COMMAND ${CLANG_TIDY_EXE} -p ${CMAKE_BINARY_DIR} --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy --use-color ${ALL_TIDY_FILES}
-        COMMENT "Running Clang-Tidy static analysis..."
-    )
+  add_custom_target(tidy
+    COMMAND ${CLANG_TIDY_EXE} -p ${CMAKE_BINARY_DIR} --config-file=${CMAKE_SOURCE_DIR}/.clang-tidy --use-color ${ALL_TIDY_FILES}
+    COMMENT "Running Clang-Tidy static analysis..."
+  )
 else()
-    message(WARNING "clang-tidy not found. 'tidy' target will not be available.")
+  message(WARNING "clang-tidy not found. 'tidy' target will not be available.")
 endif()
 
+
+# --- doxygen
+
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+  set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/docs")
+
+  doxygen_add_docs(docs
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+    COMMENT "Generating API documentation"
+  )
+else()
+  message(STATUS "Doxygen not found, documentation target will not be created.")
+endif()
 
 
 # --- executable: scripts-rofi

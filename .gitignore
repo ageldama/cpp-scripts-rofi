@@ -63,3 +63,6 @@ dkms.conf
 /Makefile
 /cmake_install.cmake
 /.cache/
+/CMakeDoxyfile.in
+/CMakeDoxygenDefaults.cmake
+/Doxyfile.docs
