@@ -1,6 +1,6 @@
 ---
 # Enable all checks by default, then disable specific ones
-Checks: '-*,bugprone-*,modernize-*,performance-*,readability-*'
+Checks: '-*,bugprone-*,modernize-*,performance-*,readability-*,misc-include-cleaner,clang-analyzer-*'
 
 # Treat all warnings from these checks as errors
 WarningsAsErrors: 'bugprone-*,performance-*'
