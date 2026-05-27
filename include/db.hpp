@@ -2,21 +2,21 @@
 #define DB_HPP
 
 #include <cstdint>
+#include <ctime>
 #include <functional>
 #include <map>
 #include <optional>
 #include <stdexcept>
 #include <string>
-#include <ctime>
 #include <vector>
 
 namespace SR::db {
 
-  enum {
+enum run_type_t {
     RUN_UNKNOWN = -1,
     RUN_NORMAL = 0,
     RUN_IN_TERM = 1,
-} run_type_t;
+};
 
 using run_count_t = uint32_t;
 
@@ -29,25 +29,25 @@ using db_t = std::map<std::string, db_entry>;
 
 extern db_t v_db;
 
- void init();
+void init();
 
- void cleanup();
+void cleanup();
 
- bool save(const char* filename);
+bool save(const char* filename);
 
- void load(const char* filename);
+void load(const char* filename);
 
- std::optional<std::reference_wrapper<db_entry>> get(
+std::optional<std::reference_wrapper<db_entry>> get(
     const std::string& cmd);
 
- time_t upd_last_epoch(const std::string& cmd);
+time_t upd_last_epoch(const std::string& cmd);
 
- time_t get_last_epoch(const std::string& cmd);
+time_t get_last_epoch(const std::string& cmd);
 
- run_count_t incr_run_count(
+run_count_t incr_run_count(
     const std::string& cmd, const run_type_t run_type);
 
- run_type_t get_most_run_type(
+run_type_t get_most_run_type(
     const std::string& cmd, const run_type_t default_val);
 
 class FileNotFoundException : public std::runtime_error {

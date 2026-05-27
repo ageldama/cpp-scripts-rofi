@@ -21,18 +21,17 @@ std::string rtrim(const std::string& s)
 
 std::string trim(const std::string& str) { return rtrim(ltrim(str)); }
 
-
-    SR::string_vector split_tokens(const std::string& s,
-                                   const char sep) {
-      std::stringstream ss(s);
-      std::string token;
-      SR::string_vector results;
+SR::string_vector split_tokens(const std::string& s, const char sep)
+{
+    std::stringstream ss(s);
+    std::string token;
+    SR::string_vector results;
 
     while (std::getline(ss, token, sep)) {
         results.emplace_back(token);
     }
 
     return results;
-    }
+}
 
 }

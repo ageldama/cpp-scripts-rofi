@@ -9,8 +9,8 @@
 #include "string_vector.hpp"
 
 #include "argp.hpp"
-#include "tildeexpand.hpp"
 #include "str.hpp"
+#include "tildeexpand.hpp"
 
 #define SCRIPT_ROFI_NO_DB_FLAG_FILE "~/.no-db-scripts-rofi"
 #define SCRIPT_ROFI_DB_FLAG_FILE "~/.scripts-rofi.hist"
@@ -137,32 +137,31 @@ void print_usage(FILE* fp)
 
 void set_file_regexes(const char* arg)
 {
-  v_file_regexes = SR::str::split_tokens(std::string(arg), ':');
+    v_file_regexes = SR::str::split_tokens(std::string(arg), ':');
 }
 
 void set_script_dirs(const char* arg)
 {
-  v_script_dirs = SR::str::split_tokens(std::string(arg), ':');
-  std::transform(v_script_dirs.begin(), v_script_dirs.end(),
-                 v_script_dirs.begin(),
-                 [](const std::string& s){
-                   std::string expanded;
-                   SR::tilde::expand(s.c_str(), expanded);
-                   return expanded;
-                 });
+    v_script_dirs = SR::str::split_tokens(std::string(arg), ':');
+    std::transform(v_script_dirs.begin(), v_script_dirs.end(),
+        v_script_dirs.begin(), [](const std::string& s) {
+            std::string expanded;
+            SR::tilde::expand(s.c_str(), expanded);
+            return expanded;
+        });
 }
 
 namespace fs = std::filesystem;
 
 bool db_load_allowed()
 {
-  if (!v_db_file.empty()) {
+    if (!v_db_file.empty()) {
         return false;
-  }
-  if (fs::exists(v_no_db_flag_file)){
+    }
+    if (fs::exists(v_no_db_flag_file)) {
         return false;
-  }
-  return true;
+    }
+    return true;
 }
 
 extern bool db_save_allowed() { return db_load_allowed() && v_save; }

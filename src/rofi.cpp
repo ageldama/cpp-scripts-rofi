@@ -18,9 +18,9 @@ ssize_t pipe_write(const int fd, const char* s)
 ssize_t pipe_write_and_sepchar(
     const int fd, const char* s, const char sep)
 {
-  ssize_t written = pipe_write(fd, s);
-  std::array<char, 1> buf{ sep };
-    written += write(fd, buf, 1);
+    ssize_t written = pipe_write(fd, s);
+    std::array<char, 1> buf { sep };
+    written += write(fd, buf.data(), 1);
     return written;
 }
 
@@ -41,10 +41,10 @@ std::string read_all_fd(int fd)
 std::tuple<bool, int, std::string> run_rofi(
     const SR::string_vector& cmdv, const rofi_write_fn& write_fn)
 {
-  std::array<int, 2> p_to_c; // parent => child
-  std::array<int, 2> c_to_p; // child => parent
+    std::array<int, 2> p_to_c; // parent => child
+    std::array<int, 2> c_to_p; // child => parent
 
-  if (pipe(p_to_c.data()) == -1 || pipe(c_to_p.data()) == -1) {
+    if (pipe(p_to_c.data()) == -1 || pipe(c_to_p.data()) == -1) {
         return { false, 0, "" };
     }
 

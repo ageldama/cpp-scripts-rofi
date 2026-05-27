@@ -1,8 +1,8 @@
 #include "file_find.hpp"
 
 #include "safe_regex.hpp"
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -34,14 +34,15 @@ directory_entry_predicate make_only_file_and_regex_match(
     return
         [regex_ptrs](
             const std::filesystem::directory_entry& entry) -> bool {
-          if (!fs::is_regular_file(entry)) {
+            if (!fs::is_regular_file(entry)) {
                 return false;
-          }
+            }
             const std::string abs_path = entry.path().string();
-            return std::ranges::any_of(regex_ptrs,
-                                [&abs_path](const regex_ptr& rptr){
-                                  return regexec(rptr.get(), abs_path.c_str(), 0,nullptr,0);
-                                });
+            return std::ranges::any_of(
+                regex_ptrs, [&abs_path](const regex_ptr& rptr) {
+                    return regexec(
+                        rptr.get(), abs_path.c_str(), 0, nullptr, 0);
+                });
         };
 }
 

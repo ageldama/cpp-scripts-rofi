@@ -1,8 +1,8 @@
 #include "exec.hpp"
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cerrno>
 #include <unistd.h>
 
 namespace SR::exec {
