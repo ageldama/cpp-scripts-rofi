@@ -12,20 +12,20 @@ void init() { }
 
 void cleanup() { }
 
-constexpr std::string_view DB_MAGIC = "C-SCRIPTS-ROFI";
-constexpr std::size_t DB_MAGIC_LEN = DB_MAGIC.length();
+constexpr std::string_view db_magic = "C-SCRIPTS-ROFI";
+constexpr std::size_t db_magic_len = db_magic.length();
 
 bool save(const char* filename)
 {
-    FILE* fp = NULL;
+    FILE* fp = nullptr;
     fp = fopen(filename, "wb");
-    if (NULL == fp) {
+    if (nullptr == fp) {
         perror("fopen for write hist");
         return false;
     }
 
-    fwrite(static_cast<const void*>(std::string(DB_MAGIC).c_str()),
-        DB_MAGIC_LEN, 1, fp);
+    fwrite(static_cast<const void*>(std::string(db_magic).c_str()),
+        db_magic_len, 1, fp);
 
     size_t tot = v_db.size();
     fwrite(static_cast<void*>(&tot), sizeof(tot), 1, fp);
@@ -53,7 +53,7 @@ bool save(const char* filename)
     }
 
     fclose(fp);
-    fp = NULL;
+    fp = nullptr;
 
     return true; // ok
 }
@@ -66,21 +66,21 @@ void load(const char* filename)
         throw FileNotFoundException(filename);
     }
 
-    if (fs::file_size(filename) < DB_MAGIC_LEN) {
+    if (fs::file_size(filename) < db_magic_len) {
         throw FileMagicInvalidException(filename);
     }
 
-    FILE* fp = NULL;
+    FILE* fp = nullptr;
     fp = fopen(filename, "rb");
-    if (NULL == fp) {
+    if (nullptr == fp) {
         throw FileNotFoundException(filename);
     }
 
     // magic header
-    char* magic_buf = static_cast<char*>(malloc(DB_MAGIC_LEN));
-    fread(magic_buf, DB_MAGIC_LEN, 1, fp);
-    bool magic_ok = ::strncmp(std::string(DB_MAGIC).c_str(),
-                        magic_buf, DB_MAGIC_LEN)
+    char* magic_buf = static_cast<char*>(malloc(db_magic_len));
+    fread(magic_buf, db_magic_len, 1, fp);
+    bool magic_ok = ::strncmp(std::string(db_magic).c_str(),
+                        magic_buf, db_magic_len)
         == 0;
 
     free(static_cast<void*>(magic_buf));
@@ -148,9 +148,9 @@ std::optional<std::reference_wrapper<db_entry>> get(
 
 time_t get_last_epoch(const std::string& cmd)
 {
-    auto entry_ = get(cmd);
-    if (entry_) {
-        const db_entry& entry_ref = entry_.value();
+    auto entry_opt = get(cmd);
+    if (entry_opt) {
+        const db_entry& entry_ref = entry_opt.value();
         return entry_ref.last_epoch;
     }
     return 0;
@@ -160,9 +160,9 @@ time_t upd_last_epoch(const std::string& cmd)
 {
     time_t now = time(nullptr);
 
-    auto entry_ = get(cmd);
-    if (entry_) {
-        db_entry& entry_ref = entry_.value();
+    auto entry_opt = get(cmd);
+    if (entry_opt) {
+        db_entry& entry_ref = entry_opt.value();
         entry_ref.last_epoch = now;
     } else {
         v_db[cmd] = db_entry {
@@ -177,9 +177,9 @@ time_t upd_last_epoch(const std::string& cmd)
 run_type_t get_most_run_type(
     const std::string& cmd, const run_type_t default_val)
 {
-    auto entry_ = get(cmd);
-    if (entry_) {
-        const db_entry& entry_ref = entry_.value();
+    auto entry_opt = get(cmd);
+    if (entry_opt) {
+        const db_entry& entry_ref = entry_opt.value();
         const auto& counts = entry_ref.run_type_counts;
         if (counts.empty())
             return default_val;
@@ -198,18 +198,18 @@ run_type_t get_most_run_type(
 run_count_t incr_run_count(
     const std::string& cmd, const run_type_t run_type)
 {
-    auto entry_ = get(cmd);
+    auto entry_opt = get(cmd);
 
-    if (!entry_) {
+    if (!entry_opt) {
         auto entry = db_entry {
             .last_epoch = 0,
             .run_type_counts = std::vector<run_count_t> {},
         };
         v_db[cmd] = entry;
-        entry_ = entry;
+        entry_opt = entry;
     }
 
-    db_entry& entry = entry_.value();
+    db_entry& entry = entry_opt.value();
     auto size = static_cast<std::vector<run_count_t>::size_type>(
         run_type + 1);
     if (entry.run_type_counts.size() < size) {

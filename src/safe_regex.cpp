@@ -4,7 +4,7 @@ namespace SR::safe_regex {
 
 void regex_deleter::operator()(regex_t* r) const
 {
-    if (r) {
+    if (r != nullptr) {
         regfree(r);
         delete r;
     }

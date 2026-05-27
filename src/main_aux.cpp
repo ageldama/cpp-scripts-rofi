@@ -56,7 +56,7 @@ SR::string_vector sorted_file_list()
 {
     auto files = string_vector {};
 
-    if (SR::argp::v_file_regexes.size() > 0) {
+    if (!SR::argp::v_file_regexes.empty()) {
         files
             = file_find::find_in_directories(SR::argp::v_script_dirs,
                 file_find::make_only_file_and_regex_match(

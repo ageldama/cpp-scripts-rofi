@@ -64,11 +64,12 @@ int main(int argc, char* argv[])
     }
 
     const auto cmd = res.value().stdout;
-    const auto final_run_type_
+    const auto final_run_type_opt
         = ask_most_run_type(cmd, res.value().alt);
-    if (!final_run_type_)
+    if (!final_run_type_opt) {
         exit(EXIT_FAILURE);
-    const auto final_run_type = final_run_type_.value();
+    }
+    const auto final_run_type = final_run_type_opt.value();
 
     if (SR::argp::db_save_allowed()) {
         SR::db::upd_last_epoch(cmd);
@@ -84,7 +85,7 @@ int main(int argc, char* argv[])
         cmd,
     };
 
-    if (SR::argp::v_exec_wrapper != "") {
+    if (!SR::argp::v_exec_wrapper.empty()) {
         SR::str::tokenize_cmd_and_prepend(
             cmdv, SR::argp::v_exec_wrapper);
     }

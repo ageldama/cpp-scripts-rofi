@@ -10,7 +10,7 @@ std::optional<rofi_result> select_list(
     const rofi_common_opts& common_opts,
     const SR::string_vector& sel_list)
 {
-    std::string ignorecase_opts = "";
+  std::string ignorecase_opts;
     if (common_opts.ignorecase)
         ignorecase_opts = "-i";
 

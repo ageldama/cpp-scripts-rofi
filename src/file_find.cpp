@@ -2,6 +2,7 @@
 
 #include "safe_regex.hpp"
 #include <cassert>
+#include <algorithm>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -35,19 +36,16 @@ directory_entry_predicate make_only_file_and_regex_match(
             const std::filesystem::directory_entry& entry) -> bool {
             if (!fs::is_regular_file(entry))
                 return false;
-            std::string abs_path = entry.path().string();
-            for (const auto& regex_ptr : regex_ptrs) {
-                if (regexec(regex_ptr.get(), abs_path.c_str(), 0,
-                        nullptr, 0)
-                    == 0)
-                    return true;
-            }
-            return false;
+            const std::string abs_path = entry.path().string();
+            return std::ranges::any_of(regex_ptrs,
+                                [&abs_path](const regex_ptr& rptr){
+                                  return regexec(rptr.get(), abs_path.c_str(), 0,nullptr,0);
+                                });
         };
 }
 
 SR::string_vector find_in_directories(const SR::string_vector& dirs,
-    directory_entry_predicate entry_pred)
+    const directory_entry_predicate& entry_pred)
 {
     SR::string_vector results;
 

@@ -11,36 +11,36 @@ namespace SR::rofi {
 
 using rofi_write_fn = std::function<void(const int fd)>;
 
-extern int pipe_write(const int fd, const char* s);
-extern int pipe_write_and_sepchar(
+ssize_t pipe_write(const int fd, const char* s);
+ssize_t pipe_write_and_sepchar(
     const int fd, const char* s, const char sep);
 
-extern std::string read_all_fd(int fd);
+ std::string read_all_fd(int fd);
 
-extern std::tuple<bool, int, std::string> run_rofi(
-    const SR::string_vector& cmdv, rofi_write_fn write_fn);
+ std::tuple<bool, int, std::string> run_rofi(
+    const SR::string_vector& cmdv, const rofi_write_fn& write_fn);
 
-struct rofi_result {
+ rofi_result {
     int exitcode;
     bool alt;
     std::string stdout;
 };
 
-struct rofi_common_opts {
+ rofi_common_opts {
     std::string prompt;
     bool ignorecase;
     std::string addopts;
 };
 
-extern std::optional<rofi_result> ask_yn(
+ std::optional<rofi_result> ask_yn(
     const rofi_common_opts& common_opts, const std::string& label_y,
     const std::string& label_n);
 
-extern std::optional<rofi_result> select_list(
+ std::optional<rofi_result> select_list(
     const rofi_common_opts& common_opts,
     const SR::string_vector& sel_list);
 
-extern void show_error(const std::string message);
+ void show_error(const std::string message);
 
 }
 
