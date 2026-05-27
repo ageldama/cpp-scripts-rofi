@@ -181,13 +181,15 @@ run_type_t get_most_run_type(
     if (entry_opt) {
         const db_entry& entry_ref = entry_opt.value();
         const auto& counts = entry_ref.run_type_counts;
-        if (counts.empty())
+        if (counts.empty()) {
             return default_val;
+        }
 
         const auto it
             = std::max_element(counts.begin(), counts.end());
-        if (counts.end() == it)
+        if (counts.end() == it) {
             return default_val;
+        }
 
         const auto idx = std::distance(counts.begin(), it);
         return static_cast<run_type_t>(idx);

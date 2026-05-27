@@ -11,8 +11,9 @@ std::optional<rofi_result> select_list(
     const SR::string_vector& sel_list)
 {
   std::string ignorecase_opts;
-    if (common_opts.ignorecase)
+  if (common_opts.ignorecase) {
         ignorecase_opts = "-i";
+  }
 
     SR::string_vector cmdv = {
         "rofi",
@@ -45,8 +46,9 @@ std::optional<rofi_result> select_list(
     const int magic_exitcode = 256;
 
     if (!run_ok
-        || (run_exitcode > 0 && run_exitcode <= magic_exitcode))
+        || (run_exitcode > 0 && run_exitcode <= magic_exitcode)) {
         return std::nullopt;
+    }
 
     return std::make_optional(rofi_result {
         .exitcode = run_exitcode,

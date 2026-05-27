@@ -162,7 +162,7 @@ bool db_load_allowed()
   if (fs::exists(v_no_db_flag_file)){
         return false;
   }
-    return true;
+  return true;
 }
 
 extern bool db_save_allowed() { return db_load_allowed() && v_save; }

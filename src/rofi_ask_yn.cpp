@@ -9,8 +9,9 @@ std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
     const std::string& label_y, const std::string& label_n)
 {
   std::string ignorecase_opts;
-    if (common_opts.ignorecase)
+  if (common_opts.ignorecase) {
         ignorecase_opts = "-i";
+  }
 
     SR::string_vector cmdv = {
         "rofi",
@@ -52,8 +53,9 @@ std::optional<rofi_result> ask_yn(const rofi_common_opts& common_opts,
 
     std::string run_stdout_trimmed = str::trim(run_stdout);
 
-    if (!run_ok || run_exitcode != 0)
+    if (!run_ok || run_exitcode != 0) {
         return std::nullopt;
+    }
 
     return std::make_optional(rofi_result {
         .exitcode = run_exitcode,
