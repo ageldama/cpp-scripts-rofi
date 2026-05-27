@@ -53,7 +53,7 @@ auto get_most_run_type(const std::string& cmd, run_type_t default_val)
 class FileNotFoundException : public std::runtime_error {
 public:
     FileNotFoundException(const std::string& filename)
-        : std::runtime_error(filename)
+        : std::runtime_error("FileNotFoundException: " + filename)
     {
     }
 };
@@ -61,7 +61,7 @@ public:
 class FileMagicInvalidException : public std::runtime_error {
 public:
     FileMagicInvalidException(const std::string& filename)
-        : std::runtime_error(filename)
+        : std::runtime_error("FileMagicInvalidException: " + filename)
     {
     }
 };
