@@ -109,7 +109,7 @@ void load(const char* filename)
         // run_alt
         uint8_t run_alt_i = 0;
         fread(&run_alt_i, sizeof(uint8_t), 1, fp);
-        entry.run_alt = run_alt_i > 0 ? true : false;
+        entry.run_alt = run_alt_i > 0;
 
         //
         v_db.insert_or_assign(cmd, entry);

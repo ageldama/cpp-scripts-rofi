@@ -41,8 +41,8 @@ void show_error(const std::string& message);
 
 class run_alt_callbacks {
 public:
-    virtual bool is_run_alt(const std::string& cmd) = 0;
-    virtual bool toggle_run_alt(const std::string& cmd) = 0;
+    virtual auto is_run_alt(const std::string& cmd) -> bool = 0;
+    virtual auto toggle_run_alt(const std::string& cmd) -> bool = 0;
     virtual ~run_alt_callbacks() = default;
 };
 

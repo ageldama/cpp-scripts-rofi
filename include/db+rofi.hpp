@@ -1,5 +1,5 @@
-#ifndef DB__ROFI_HPP
-#define DB__ROFI_HPP
+#ifndef DB_PLUS_ROFI_HPP
+#define DB_PLUS_ROFI_HPP
 
 #include "db.hpp"
 #include "rofi.hpp"
@@ -7,15 +7,15 @@
 namespace SR::db {
   class db_run_alt_callbacks : public SR::rofi::run_alt_callbacks {
 public:
-    bool is_run_alt(const std::string& cmd) override {
+    auto is_run_alt(const std::string& cmd)  -> bool override {
       return SR::db::is_run_alt(cmd);
     }
 
-    bool toggle_run_alt(const std::string& cmd) override {
+    auto toggle_run_alt(const std::string& cmd)  -> bool override {
       return SR::db::toggle_run_alt(cmd);
     }
 };
 
 }
 
-#endif /* DB__ROFI_HPP */
+#endif /* DB_PLUS_ROFI_HPP */
