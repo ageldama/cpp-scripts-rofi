@@ -156,7 +156,7 @@ namespace fs = std::filesystem;
 
 auto db_load_allowed() -> bool
 {
-    if (!v_db_file.empty()) {
+    if (v_db_file.empty()) {
         return false;
     }
     if (fs::exists(v_no_db_flag_file)) {

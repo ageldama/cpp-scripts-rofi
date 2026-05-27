@@ -56,14 +56,14 @@ auto sorted_file_list() -> SR::string_vector
 {
     auto files = string_vector {};
 
-    if (!SR::argp::v_file_regexes.empty()) {
+    if (SR::argp::v_file_regexes.empty()) {
+        files = file_find::find_in_directories(
+            SR::argp::v_script_dirs, file_find::only_file);
+    } else {
         files
             = file_find::find_in_directories(SR::argp::v_script_dirs,
                 file_find::make_only_file_and_regex_match(
                     SR::argp::v_file_regexes));
-    } else {
-        files = file_find::find_in_directories(
-            SR::argp::v_script_dirs, file_find::only_file);
     }
 
     std::sort(files.begin(), files.end(),
