@@ -39,7 +39,7 @@ auto save(const char* filename) -> bool
             sizeof(time_t), 1, fp);
 
         // run_alt
-        uint8_t run_alt_i = static_cast<uint8_t>(entry.run_alt);
+        uint8_t run_alt_i = entry.run_alt ? 1 : 0;
         fwrite(&run_alt_i, sizeof(uint8_t), 1, fp);
     }
 
@@ -109,6 +109,7 @@ void load(const char* filename)
         // run_alt
         uint8_t run_alt_i = 0;
         fread(&run_alt_i, sizeof(uint8_t), 1, fp);
+        entry.run_alt = run_alt_i > 0 ? true : false;
 
         //
         v_db.insert_or_assign(cmd, entry);
