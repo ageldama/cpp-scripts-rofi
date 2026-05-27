@@ -61,6 +61,9 @@ void print_dump()
     cout << "* ignorecase = \t" << argp::v_ignorecase << endl;
     cout << "* no_db_flag_file = \t" << argp::v_no_db_flag_file
          << endl;
+    cout << "* run_alt_tag = \t" << argp::v_run_alt_tag << endl;
+    cout << "* use_markup_run_alt_tag = \t"
+         << argp::v_use_markup_run_alt_tag << endl;
 
     cout << endl;
 

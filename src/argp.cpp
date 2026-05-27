@@ -31,16 +31,17 @@ std::string v_exec_wrapper;
 SR::string_vector v_file_regexes;
 bool v_ignorecase = false;
 std::string v_no_db_flag_file;
+std::string v_run_alt_tag;
+bool v_use_markup_run_alt_tag;
 
 void init()
 {
     SR::tilde::expand(SCRIPT_ROFI_DB_FLAG_FILE, v_db_file);
-
     v_term_command.assign(SCRIPT_ROFI_XTERM_COMMAND);
-
     SR::tilde::expand(SCRIPT_ROFI_NO_DB_FLAG_FILE, v_no_db_flag_file);
-
     set_script_dirs(SCRIPT_ROFI_SCRIPT_DIRS);
+    v_run_alt_tag.assign(" <span color='#FF69B4'>[TERM]</span>");
+    v_use_markup_run_alt_tag = true;
 }
 
 void cleanup() { }
@@ -55,7 +56,7 @@ auto parse(const std::span<char*>& args) -> int
 
     int opt;
     while ((opt = getopt(static_cast<int>(args.size()), args.data(),
-                "?hpsePS:D:T:W:/:i"))
+                "?hpsePS:D:T:W:/:iA:m"))
         != -1) {
         switch (opt) {
         case 's':
@@ -95,7 +96,15 @@ auto parse(const std::span<char*>& args) -> int
             break;
 
         case 'i':
-            v_ignorecase = true;
+            v_ignorecase = !v_ignorecase;
+            break;
+
+        case 'm':
+            v_use_markup_run_alt_tag = !v_use_markup_run_alt_tag;
+            break;
+
+        case 'A':
+            v_run_alt_tag.assign(optarg);
             break;
 
         case '?':
@@ -128,8 +137,12 @@ void print_usage(FILE* fp)
 
     P("-D HIST_DB_FILE   : %s\n", v_db_file.c_str());
     P("-T XTERM_COMMAND  : %s\n", v_term_command.c_str());
-    P("-P : Dump stored history/freqs and exit\n", );
-    P("-W : execute wrapper (like 'wine')\n", );
+    P("-P : Dump stored DB and exit\n", );
+    P("-W : Execute wrapper (like 'wine') %s\n",
+        v_exec_wrapper.c_str());
+    P("-A : 'Run in terminal' tag string (%s)\n",
+        v_run_alt_tag.c_str());
+    P("-m : Apply markup on tag string\n", );
 
     P("-/ : filename matching regex\n", );
     for (const auto& file_regex : v_file_regexes) {

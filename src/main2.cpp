@@ -44,16 +44,21 @@ void main2(const std::span<char*>& args)
 
     if (argp::v_dump_and_exit) {
         print_dump();
+        ::exit(EXIT_SUCCESS);
     }
 
     //
     auto files = sorted_file_list();
 
-    auto opts = SR::rofi::rofi_common_opts {
-        .prompt
-        = "Select a script to run (Shift-Enter == toggle:terminal)",
-        .ignorecase = SR::argp::v_ignorecase,
-        .addopts = std::string(),
+    auto opts = SR::rofi::rofi_select_list_opts {
+      .common_opts = SR::rofi::rofi_common_opts {
+            .prompt = "Select a script to run (Shift-Enter == "
+                      "toggle:terminal)",
+            .ignorecase = SR::argp::v_ignorecase,
+            .addopts = std::string(),
+      },
+      .use_markup = SR::argp::v_use_markup_run_alt_tag,
+      .run_alt_tag = SR::argp::v_run_alt_tag,
     };
     SR::db::db_run_alt_callbacks cbs;
     auto res = SR::rofi::select_list(opts, cbs, files);

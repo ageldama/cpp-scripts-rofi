@@ -17,6 +17,8 @@ extern std::string v_exec_wrapper;
 extern string_vector v_file_regexes;
 extern bool v_ignorecase;
 extern std::string v_no_db_flag_file;
+extern std::string v_run_alt_tag;
+extern bool v_use_markup_run_alt_tag;
 
 void init();
 void cleanup();

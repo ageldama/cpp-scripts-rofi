@@ -8,15 +8,20 @@ namespace SR::rofi {
 
 using namespace SR;
 
-auto select_list(const rofi_common_opts& common_opts,
+auto select_list(const rofi_select_list_opts& opts,
     run_alt_callbacks& callbacks, const SR::string_vector& sel_list)
     -> std::optional<rofi_result>
 {
     string_vector::size_type preselect = 0;
 
     std::string ignorecase_opts;
-    if (common_opts.ignorecase) {
+    if (opts.common_opts.ignorecase) {
         ignorecase_opts = "-i";
+    }
+
+    std::string markup_rows_opts;
+    if (opts.use_markup) {
+        markup_rows_opts = "-markup-rows";
     }
 
 l_show_rofi:
@@ -25,10 +30,10 @@ l_show_rofi:
     SR::string_vector cmdv = {
         "rofi",
         ignorecase_opts,
-        common_opts.addopts,
+        opts.common_opts.addopts,
         "-dmenu",
         "-p",
-        common_opts.prompt,
+        opts.common_opts.prompt,
         "-sep",
         R"(\0)",
         "-kb-accept-alt",
@@ -37,16 +42,17 @@ l_show_rofi:
         R"(Shift+Return)",
         "-format",
         "i",
+        markup_rows_opts,
         "-selected-row",
         preselect_str,
     };
 
     auto res = SR::rofi::run_rofi(
-        cmdv, [&sel_list, &callbacks](const int fd) {
+        cmdv, [&sel_list, &callbacks, &opts](const int fd) {
             for (const auto& item : sel_list) {
                 std::string item_lbl = item;
                 if (callbacks.is_run_alt(item)) {
-                    item_lbl = item + "  *** TERM ***";
+                    item_lbl = item + opts.run_alt_tag;
                 }
                 SR::rofi::pipe_write_and_sepchar(
                     fd, item_lbl.c_str(), '\0');

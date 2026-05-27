@@ -39,6 +39,12 @@ auto ask_yn(const rofi_common_opts& common_opts,
 
 void show_error(const std::string& message);
 
+struct rofi_select_list_opts {
+    rofi_common_opts common_opts;
+    bool use_markup;
+    std::string run_alt_tag;
+};
+
 class run_alt_callbacks {
 public:
     virtual auto is_run_alt(const std::string& cmd) -> bool = 0;
@@ -46,7 +52,7 @@ public:
     virtual ~run_alt_callbacks() = default;
 };
 
-auto select_list(const rofi_common_opts& common_opts,
+auto select_list(const rofi_select_list_opts& common_opts,
     run_alt_callbacks& callbacks, const SR::string_vector& sel_list)
     -> std::optional<rofi_result>;
 
