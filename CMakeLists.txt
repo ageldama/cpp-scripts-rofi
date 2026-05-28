@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(c-scripts-rofi
+project(cpp-scripts-rofi
   VERSION 2.0
   LANGUAGES CXX
 )
