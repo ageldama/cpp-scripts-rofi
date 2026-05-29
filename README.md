@@ -1,4 +1,4 @@
-# c-scripts-rofi
+# cpp-scripts-rofi
 
 Blazingly fast and easy way to launch your scripts with [Rofi](https://github.com/davatorium/rofi)
 
